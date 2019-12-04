@@ -6,6 +6,10 @@ const fs = require('fs');
 let dbConfig;
 if (fs.existsSync(__dirname, '/dbConfig.js')) {
     dbConfig = require('./dbConfig');
+    dbConfig.mysql.ssl = {
+        ca: fs.readFileSync(dbConfig.mysql.cacert)
+    }
+    console.log(dbConfig)
 } else {
     dbConfig = {
         mongo: {
