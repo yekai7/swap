@@ -1,8 +1,5 @@
 <div class='top-nav-bar' fxLayout='row' fxLayoutAlign='space-between center'>
-  <div fxLayout='row' fxLayout='start center'>
-    <h2>My site</h2>
-    <img src='../assets/swap.png' class='sitelogo'>
-  </div>
+  <img src='../assets/swap.png' class='sitelogo'>
   <div class='search-bar' fxLayoutAlign=' center'>
     <mat-form-field style='width:40vw'>
       <input matInput placeholder='Search for item or category' type='text' name='search'>
@@ -10,8 +7,21 @@
     <mat-icon>search</mat-icon>
   </div>
   <div>
-    <button mat-raised-button>Register</button>
-    <button mat-raised-button>Login</button>
+    <!-- <form fxLayout='row' fxLayoutAlign=' center' fxLayoutGap='2vw'>
+      <mat-form-field>
+        <input matInput type='text' name='username' placeholder='Email' required>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput type='password' name='password' placeholder='Password' required>
+      </mat-form-field>
+      <div>
+          <button mat-raised-button>Login/Register</button>
+      </div>
+    </form> -->
+    <button mat-raised-button (click)="openDialog()">Login</button>
+    <button mat-raised-button (click)="openDialog()">Register</button>
+
   </div>
 </div>
 <router-outlet></router-outlet>

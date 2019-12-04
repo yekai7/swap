@@ -10,12 +10,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
-
+import { MatDialogModule } from '@angular/material/dialog';
 
 const MODULE = [
     MatInputModule, MatToolbarModule, MatButtonModule,
     MatButtonToggleModule, MatRadioModule, MatFormFieldModule,
-    MatDatepickerModule, MatIconModule,
+    MatDatepickerModule, MatIconModule, MatDialogModule,
     MatSelectModule, MatTableModule, MatStepperModule
 ]
 
