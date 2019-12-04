@@ -1,0 +1,17 @@
+<div class='top-nav-bar' fxLayout='row' fxLayoutAlign='space-between center'>
+  <div fxLayout='row' fxLayout='start center'>
+    <h2>My site</h2>
+    <img src='../assets/swap.png' class='sitelogo'>
+  </div>
+  <div class='search-bar' fxLayoutAlign=' center'>
+    <mat-form-field style='width:40vw'>
+      <input matInput placeholder='Search for item or category' type='text' name='search'>
+    </mat-form-field>
+    <mat-icon>search</mat-icon>
+  </div>
+  <div>
+    <button mat-raised-button>Register</button>
+    <button mat-raised-button>Login</button>
+  </div>
+</div>
+<router-outlet></router-outlet>

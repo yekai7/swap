@@ -1,0 +1,9 @@
+.top-nav-bar{
+    padding: 10px;
+    height:10vh;
+    border-bottom:2px solid lightgrey;
+}
+
+.sitelogo {
+    height: 8vh;
+}
