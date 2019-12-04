@@ -1,25 +1,27 @@
+<h2 mat-dialog-title fxLayoutAlign='center'>Registration page</h2>
+
 <mat-dialog-content>
     <div class='registerForm'>
         <form [formGroup]='registerForm'>
 
             <mat-form-field>
-                <input matInput placeholder="Email" name="email" formControlName='email'>
+                <input matInput type='email' placeholder="Email" name="email" formControlName='email'>
             </mat-form-field>
 
             <br>
             <mat-form-field>
-                <input matInput placeholder="name" name="name" formControlName='name'>
+                <input matInput type='text'placeholder="Name" name="name" formControlName='name'>
             </mat-form-field>
 
             <br>
             <mat-form-field>
-                <input matInput placeholder="Password" name="Password" formControlName='password'>
+                <input matInput type='password' placeholder="Password" name="password" formControlName='password'>
             </mat-form-field>
 
 
             <div mat-dialog-actions fxLayoutAlign='space-around'>
                 <button color='warn' mat-raised-button mat-dialog-close>Cancel</button>
-                <button color='primary' mat-raised-button (click)="register()" [disabled]='registerForm.invalid'>Login</button>
+                <button color='primary' mat-raised-button (click)="register()" [disabled]='registerForm.invalid'>Register</button>
             </div>
 
         </form>
