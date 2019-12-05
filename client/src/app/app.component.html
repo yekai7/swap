@@ -1,14 +1,44 @@
-<div class='top-nav-bar' fxLayout='row' fxLayoutAlign='space-between center'>
-  <img src='../assets/swap.png' class='sitelogo'>
-  <div class='search-bar' fxLayoutAlign=' center'>
-    <mat-form-field style='width:40vw'>
-      <input matInput placeholder='Search for item or category' type='text' name='search'>
-    </mat-form-field>
-    <mat-icon>search</mat-icon>
+<div class='top-nav-bar' fxLayoutAlign='space-around'>
+  <div fxLayout='row'>
+    <img src='../assets/swap.png' class='sitelogo'>
+    <h1>MyApp</h1>
   </div>
-  <div *ngIf='!authenticated'>
-    <button mat-raised-button (click)="openDialog('login')">Login</button>
-    <button mat-raised-button (click)="openDialog('register')">Register</button>
+
+  <div class='search-bar' fxLayoutAlign=' center'>
+    <form>
+      <mat-form-field style='width:5vw;'>
+        <mat-select [(value)]="searchBy">
+          <mat-option value="name">Name</mat-option>
+          <mat-option value="category">Category</mat-option>
+        </mat-select>
+      </mat-form-field>
+      |
+      <mat-form-field style='width:40vw;'>
+        <input matInput placeholder='Search by {{searchBy}}' type='text' name='search'>
+      </mat-form-field>
+      <mat-icon>search</mat-icon>
+    </form>
+
+  </div>
+
+  <div fxLayoutAlign=' center'>
+    <div *ngIf='!userState.authenticated' fxLayoutGap='1vw'>
+      <button mat-raised-button (click)="openDialog('login')" color='primary'>Login</button>
+      <button mat-raised-button (click)="openDialog('register')" color='primary'>Register</button>
+    </div>
+
+    <div *ngIf='userState.authenticated'>
+      <button mat-raised-button (click)='logout()' color='primary'>Logout</button>
+    </div>
   </div>
 </div>
+<div class='category-bar'>
+  <div *ngFor='let m of menu'>
+    <button mat-button [routerLink]="['category', m.name]">{{m.name}}</button>
+  </div>
+</div>
+
 <router-outlet></router-outlet>
+<h1>
+  Test
+</h1>

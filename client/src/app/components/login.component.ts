@@ -5,6 +5,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder } from '@angular/forms';
 import { DBService } from '../db.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +17,7 @@ export class LoginComponent implements OnInit {
 
   loginForm:FormGroup;
 
-  constructor(private dbSvc: DBService, private fb: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>, @Inject(MAT_DIALOG_DATA) data) { }
+  constructor(private dbSvc: DBService, private fb: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
@@ -25,12 +27,13 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log(this.loginForm.value);
     this.dialogRef.close(this.loginForm.value);
     this.dbSvc.loginUser(this.loginForm.value).then(result=>{
-      console.log(result)
+      if(result==401)
+        return alert("Login failed")
+      alert(`You are logged in.`)
     }).catch(err=>{
-      console.log(err)
+      alert(err)
     })
   }
 

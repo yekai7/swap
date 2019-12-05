@@ -1,9 +1,27 @@
 .top-nav-bar{
+    display: flex;
+    justify-content:space-evenly;
     padding: 10px;
     height:10vh;
     border-bottom:2px solid lightgrey;
+    background-color: #1d1d1f;
+    color: white;
 }
 
 .sitelogo {
     height: 8vh;
+}
+
+.search-bar {
+    padding-top: 3vh;
+}
+
+.category-bar {
+    display: flex;
+    justify-content:space-evenly;
+    padding: 10px;
+    height:5vh;
+    border-bottom:2px solid lightgrey;
+    background-color: #1d1d1f;
+    color: white;
 }

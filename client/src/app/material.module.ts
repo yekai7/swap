@@ -11,12 +11,15 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatTableModule } from '@angular/material/table';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatMenuModule } from '@angular/material/menu';
 
 const MODULE = [
     MatInputModule, MatToolbarModule, MatButtonModule,
     MatButtonToggleModule, MatRadioModule, MatFormFieldModule,
     MatDatepickerModule, MatIconModule, MatDialogModule,
-    MatSelectModule, MatTableModule, MatStepperModule
+    MatSelectModule, MatTableModule, MatStepperModule,
+    MatSnackBarModule, MatMenuModule
 ]
 
 @NgModule({

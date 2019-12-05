@@ -11,20 +11,34 @@ import { DBService } from './db.service';
 })
 export class AppComponent {
 
-  constructor(private dialog: MatDialog, private dbSvc: DBService) { }
+  constructor(private dialog: MatDialog) { }
 
-  authenticated = this.dbSvc.isAuthenticated();
-  // ngOnInit() {
-  //   this.authenticated = this.dbSvc.isAuthenticated();
-  // }
+  userState = JSON.parse(window.localStorage.getItem('userState')) || false;
 
-  openDialog(method:string) {
+  searchBy = 'name';
+
+  menu = [
+    {
+      name: "Fashion", subMenu: [
+        { name: "Male" }, { name: "Female" }
+      ]
+    },
+    {
+      name: "Electronics", subMenu: [
+        { name: "Camera"}, {name: "Computers"}
+      ]
+    }
+  ]
+
+  openDialog(method: string) {
     const dialogConfig = new MatDialogConfig();
-
     dialogConfig.autoFocus = true;
-
     if (method == 'login')
       return this.dialog.open(LoginComponent, dialogConfig);
     return this.dialog.open(RegisterComponent, dialogConfig);
+  }
+
+  logout() {
+    return window.localStorage.clear();
   }
 }
