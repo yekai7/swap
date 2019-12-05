@@ -12,6 +12,7 @@ import { MaterialModule } from './material.module';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register.component';
 import { ShowByCategoryComponent } from './components/show-by-category.component';
+import { CookieService } from 'ngx-cookie-service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { ShowByCategoryComponent } from './components/show-by-category.component
     FlexLayoutModule, MaterialModule,
     ReactiveFormsModule, FormsModule
   ],
-  providers: [DBService],
+  providers: [DBService, CookieService],
   bootstrap: [AppComponent],
   entryComponents: [LoginComponent, RegisterComponent]
 })

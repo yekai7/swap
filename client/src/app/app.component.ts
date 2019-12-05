@@ -1,8 +1,10 @@
+
 import { Component } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './components/login.component';
 import { RegisterComponent } from './components/register.component';
 import { DBService } from './db.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +13,18 @@ import { DBService } from './db.service';
 })
 export class AppComponent {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private dbSvc:DBService, private cookieSvc: CookieService) { }
 
-  userState = JSON.parse(window.localStorage.getItem('userState')) || false;
+  // a = JSON.parse(window.localStorage.getItem('userState'));
+  // userState = this.a.subscribe(result=>{
+  //   console.log("test") 
+  // }) || false;
+
+  // userState = this.dbSvc.isAuthenticated().subscribe(result=>{
+
+  // })
+  // userState = JSON.parse(window.localStorage.getItem('userState')) || false
+  userState = this.cookieSvc.check('authenticated');
 
   searchBy = 'name';
 
@@ -39,6 +50,7 @@ export class AppComponent {
   }
 
   logout() {
-    return window.localStorage.clear();
+    console.log("LOGOUT")
+    return this.cookieSvc.deleteAll();
   }
 }

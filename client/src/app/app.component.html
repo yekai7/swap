@@ -22,12 +22,12 @@
   </div>
 
   <div fxLayoutAlign=' center'>
-    <div *ngIf='!userState.authenticated' fxLayoutGap='1vw'>
+    <div *ngIf='!userState' fxLayoutGap='1vw'>
       <button mat-raised-button (click)="openDialog('login')" color='primary'>Login</button>
       <button mat-raised-button (click)="openDialog('register')" color='primary'>Register</button>
     </div>
 
-    <div *ngIf='userState.authenticated'>
+    <div *ngIf='userState'>
       <button mat-raised-button (click)='logout()' color='primary'>Logout</button>
     </div>
   </div>
