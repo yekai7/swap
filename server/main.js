@@ -73,9 +73,10 @@ app.post('/login', express.json(),
             })
             .toArray()
             .then(result=>{
-                rec = result[0];
+                // rec = result[0];
                 const token = jwt.sign({
-                    sub: rec.name,
+                    // sub: rec.name,
+                    sub: req.user,
                     iss: 'swapDB',
                     iat: currentTime,
                     exp: currentTime  + (1000 * 60 * 60),

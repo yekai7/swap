@@ -6,22 +6,9 @@
     </mat-form-field>
     <mat-icon>search</mat-icon>
   </div>
-  <div>
-    <!-- <form fxLayout='row' fxLayoutAlign=' center' fxLayoutGap='2vw'>
-      <mat-form-field>
-        <input matInput type='text' name='username' placeholder='Email' required>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput type='password' name='password' placeholder='Password' required>
-      </mat-form-field>
-      <div>
-          <button mat-raised-button>Login/Register</button>
-      </div>
-    </form> -->
+  <div *ngIf='!authenticated'>
     <button mat-raised-button (click)="openDialog('login')">Login</button>
     <button mat-raised-button (click)="openDialog('register')">Register</button>
-
   </div>
 </div>
 <router-outlet></router-outlet>

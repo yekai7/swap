@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './components/login.component';
 import { RegisterComponent } from './components/register.component';
+import { DBService } from './db.service';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +11,12 @@ import { RegisterComponent } from './components/register.component';
 })
 export class AppComponent {
 
-  constructor(private dialog: MatDialog) { }
+  constructor(private dialog: MatDialog, private dbSvc: DBService) { }
+
+  authenticated = this.dbSvc.isAuthenticated();
+  // ngOnInit() {
+  //   this.authenticated = this.dbSvc.isAuthenticated();
+  // }
 
   openDialog(method:string) {
     const dialogConfig = new MatDialogConfig();
