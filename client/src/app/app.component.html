@@ -1,12 +1,12 @@
 <div class='top-nav-bar' fxLayoutAlign='space-around'>
-  <div fxLayout='row'>
+  <div fxLayout='row' fxLayoutAlign='start center'>
     <img src='../assets/swap.png' class='sitelogo'>
     <h1>MyApp</h1>
   </div>
 
   <div class='search-bar' fxLayoutAlign=' center'>
     <form>
-      <mat-form-field style='width:5vw;'>
+      <mat-form-field style='width:7vw;'>
         <mat-select [(value)]="searchBy">
           <mat-option value="name">Name</mat-option>
           <mat-option value="category">Category</mat-option>
@@ -22,12 +22,12 @@
   </div>
 
   <div fxLayoutAlign=' center'>
-    <div *ngIf='!userState' fxLayoutGap='1vw'>
+    <div *ngIf='showLogin' fxLayoutGap='1vw'>
       <button mat-raised-button (click)="openDialog('login')" color='primary'>Login</button>
       <button mat-raised-button (click)="openDialog('register')" color='primary'>Register</button>
     </div>
 
-    <div *ngIf='userState'>
+    <div *ngIf='!showLogin'>
       <button mat-raised-button (click)='logout()' color='primary'>Logout</button>
     </div>
   </div>

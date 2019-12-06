@@ -1,30 +1,39 @@
 
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { LoginComponent } from './components/login.component';
 import { RegisterComponent } from './components/register.component';
 import { DBService } from './db.service';
 import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy{
 
   constructor(private dialog: MatDialog, private dbSvc:DBService, private cookieSvc: CookieService) { }
 
-  // a = JSON.parse(window.localStorage.getItem('userState'));
-  // userState = this.a.subscribe(result=>{
-  //   console.log("test") 
-  // }) || false;
+  loginStatus$: Subscription;
+  showLogin = true;
 
-  // userState = this.dbSvc.isAuthenticated().subscribe(result=>{
+  ngOnInit() {
+    if (this.cookieSvc.get('token')){
+      this.showLogin = false
+    }
+    this.loginStatus$ = this.dbSvc.loginStatus$.subscribe(
+      v => {
+        this.showLogin = v;
+        console.log("SHOULD DP IS ",this.showLogin)
+      }
+    )
+  }
 
-  // })
-  // userState = JSON.parse(window.localStorage.getItem('userState')) || false
-  userState = this.cookieSvc.check('authenticated');
+  ngOnDestroy() {
+    this.loginStatus$.unsubscribe();
+  }
 
   searchBy = 'name';
 
@@ -51,6 +60,7 @@ export class AppComponent {
 
   logout() {
     console.log("LOGOUT")
+    this.showLogin = true;
     return this.cookieSvc.deleteAll();
   }
 }

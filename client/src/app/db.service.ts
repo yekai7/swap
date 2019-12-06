@@ -2,20 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class DBService {
 
   constructor(private http: HttpClient, private router: Router, private cookieSvc: CookieService) { }
 
-  // private token;
-  // private authenticated = false;
-
-  isAuthenticated() {
-    if (window.localStorage.getItem('userState'))
-      return true;
-    return false
-  }
+  loginStatus$ = new Subject<boolean>();
 
   // canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
   //   if (this.token)
@@ -29,7 +23,7 @@ export class DBService {
     return this.http.post(`${this.url}/login`, form).toPromise()
       .then(result => {
         this.cookieSvc.set('token', result['access_token'], 1);
-        this.cookieSvc.set('authenticated', 'true', 1);
+        this.loginStatus$.next(false)
         return true
       })
       .catch(err => {
@@ -41,7 +35,7 @@ export class DBService {
     return this.http.post(`${this.url}/register`, form).toPromise()
       .then(result => {
         this.cookieSvc.set('token', result['access_token'], 1);
-        this.cookieSvc.set('authenticated', 'true', 1);
+        this.loginStatus$.next(false)
         return (true)
       })
       .catch(err => {
