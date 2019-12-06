@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DBService } from '../db.service';
 
 @Component({
   selector: 'app-show-by-category',
@@ -8,7 +9,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ShowByCategoryComponent implements OnInit {
 
-  constructor(private aRoute: ActivatedRoute) { }
+  constructor(private aRoute: ActivatedRoute, private dbSvc: DBService) { }
+  listings;
 
   ngOnInit() {
     this.aRoute.paramMap.subscribe(params => {

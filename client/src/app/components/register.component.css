@@ -1,3 +1,7 @@
 .registerForm {
     padding: 30px 0px;
 }
+
+.errorMsg {
+    font-size: small;
+}

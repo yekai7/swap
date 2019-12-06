@@ -13,13 +13,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RegisterComponent } from './components/register.component';
 import { ShowByCategoryComponent } from './components/show-by-category.component';
 import { CookieService } from 'ngx-cookie-service';
+import { ListComponent } from './components/list.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     RegisterComponent,
-    ShowByCategoryComponent
+    ShowByCategoryComponent,
+    ListComponent
   ],
   imports: [
     BrowserModule,

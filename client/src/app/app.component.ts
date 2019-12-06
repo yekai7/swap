@@ -6,49 +6,50 @@ import { RegisterComponent } from './components/register.component';
 import { DBService } from './db.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy{
+export class AppComponent implements OnInit, OnDestroy {
 
-  constructor(private dialog: MatDialog, private dbSvc:DBService, private cookieSvc: CookieService) { }
+  constructor(private dialog: MatDialog, private dbSvc: DBService, private cookieSvc: CookieService, private router: Router) { }
 
   loginStatus$: Subscription;
   showLogin = true;
+  avatar$: Subscription;
+  avatarUrl = this.cookieSvc.get('avatar');
+  menu;
+  searchBy = 'name';
 
   ngOnInit() {
-    if (this.cookieSvc.get('token')){
-      this.showLogin = false
+    this.dbSvc.getListingCategory().then(result => {
+      this.menu = result
+    })
+
+    if (this.cookieSvc.get('token')) {
+      this.showLogin = false;
     }
     this.loginStatus$ = this.dbSvc.loginStatus$.subscribe(
       v => {
         this.showLogin = v;
-        console.log("SHOULD DP IS ",this.showLogin)
+      }
+    )
+
+    this.avatar$ = this.dbSvc.avatar$.subscribe(
+      v => {
+        this.avatarUrl = v;
+        console.log("avatar url is ", this.avatarUrl)
       }
     )
   }
 
   ngOnDestroy() {
     this.loginStatus$.unsubscribe();
+    this.avatar$.unsubscribe();
   }
-
-  searchBy = 'name';
-
-  menu = [
-    {
-      name: "Fashion", subMenu: [
-        { name: "Male" }, { name: "Female" }
-      ]
-    },
-    {
-      name: "Electronics", subMenu: [
-        { name: "Camera"}, {name: "Computers"}
-      ]
-    }
-  ]
 
   openDialog(method: string) {
     const dialogConfig = new MatDialogConfig();
@@ -59,8 +60,9 @@ export class AppComponent implements OnInit, OnDestroy{
   }
 
   logout() {
-    console.log("LOGOUT")
     this.showLogin = true;
-    return this.cookieSvc.deleteAll();
+    this.avatarUrl = ''
+    this.cookieSvc.deleteAll();
+    this.router.navigate(['/'])
   }
 }

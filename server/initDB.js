@@ -38,8 +38,8 @@ const testConn = conns => {
 
     p3 = new Promise((resolve, reject) => {
         const params = {
-            Bucket: 'yekai',
-            Key: 'seach.png'
+            Bucket: 'swap',
+            Key: 'dog.jpg'
         }
         conns.s3.getObject(params, (err, result) => {
             if (err)

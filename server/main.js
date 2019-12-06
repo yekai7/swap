@@ -7,10 +7,12 @@ const dbConfig = require('./readSetDbConfig');
 const mkQuery = require('./dbUtil');
 const { loadDB, testConn } = require('./initDB');
 const connection = loadDB(dbConfig());
-const REGISTER_USER = 'insert into users(email, name, password) values (?, ?, sha2(?,256))';
+const REGISTER_USER = 'insert into users(email, name, password, avatar) values (?, ?, sha2(?,256), ?)';
 const FIND_USER = 'select count(*) as user_count from users where email = ? and password = sha2(?, 256)';
+const GET_USER_DETAIL = 'select email, name, avatar, date_joined from users where email = ?';
 const registerUser = mkQuery(REGISTER_USER, connection.mysql);
 const findUser = mkQuery(FIND_USER, connection.mysql);
+const getUserDetail = mkQuery(GET_USER_DETAIL, connection.mysql);
 const authenticateUser = (param) => {
     return (
         findUser(param)
@@ -48,7 +50,9 @@ app.post('/login', express.json(),
     passport.authenticate('local', { session: false, failureRedirect: '/failedAuth' }),
     (req, resp) => {
         const token = genToken(req.user);
-        resp.status(200).json({ token_type: 'Bearer', access_token: token })
+        getUserDetail([req.user]).then(result => {
+            resp.status(200).json({ token_type: 'Bearer', access_token: token, userDetail: result })
+        })
     }
 )
 
@@ -58,21 +62,27 @@ app.get('/failedAuth', (req, resp) => {
 
 app.post('/register', express.json(), (req, resp) => {
     const formData = req.body
-    registerUser([formData.email, formData.name, formData.password])
-        .then(result => {
-            connection.mongodb.db('swapIt').collection('users')
-                .insertOne({
-                    email: formData.email,
-                    items: []
-                })
-        })
+    const avatar = `https://avatars.dicebear.com/v2/avataaars/${formData.name}.svg`
+    registerUser([formData.email, formData.name, formData.password, avatar])
         .then(result => {
             const token = genToken(req.user);
-            resp.status(200).send({ token_type: 'Bearer', access_token: token })
+            resp.status(201).send({ token_type: 'Bearer', access_token: token, userDetail: result })
         }).catch(err => {
             if (err.errno == 1062)
                 return resp.status(409).send({ message: 'Email already taken' })
             resp.status(400).send({ err })
+        })
+})
+
+app.get('/categories', (req, resp) => {
+    connection.mongodb.db('swapIt').collection('categories')
+        .find({})
+        .toArray()
+        .then(result => {
+            console.log(result)
+            if (result)
+                return resp.status(200).send(result)
+            resp.status(400).send({ message: "No category found." })
         })
 })
 

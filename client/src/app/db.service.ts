@@ -10,12 +10,13 @@ export class DBService {
   constructor(private http: HttpClient, private router: Router, private cookieSvc: CookieService) { }
 
   loginStatus$ = new Subject<boolean>();
+  avatar$ = new Subject<string>();
 
-  // canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
-  //   if (this.token)
-  //     return (true)
-  //   return (this.router.parseUrl('/'));
-  // }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
+    if (this.cookieSvc.get('token'))
+      return (true)
+    return (this.router.parseUrl('/'));
+  }
 
   private url = 'http://localhost:3000';
 
@@ -23,6 +24,8 @@ export class DBService {
     return this.http.post(`${this.url}/login`, form).toPromise()
       .then(result => {
         this.cookieSvc.set('token', result['access_token'], 1);
+        this.cookieSvc.set('avatar', result['userDetail'][0]['avatar'])
+        this.avatar$.next(this.cookieSvc.get('avatar'))
         this.loginStatus$.next(false)
         return true
       })
@@ -34,12 +37,18 @@ export class DBService {
   registerUser(form): Promise<any> {
     return this.http.post(`${this.url}/register`, form).toPromise()
       .then(result => {
+        console.log("result from register", result)
         this.cookieSvc.set('token', result['access_token'], 1);
+        this.cookieSvc.set('avatar', result['userDetail'][0]['avatar'])
         this.loginStatus$.next(false)
         return (true)
       })
       .catch(err => {
         return err.status
       })
+  }
+
+  getListingCategory():Promise<any>{
+    return this.http.get(`${this.url}/categories`).toPromise();
   }
 }

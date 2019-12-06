@@ -10,7 +10,7 @@
 
             <br>
             <mat-form-field>
-                <input matInput type='text'placeholder="Name" name="name" formControlName='name'>
+                <input matInput type='text' placeholder="Name" name="name" formControlName='name'>
             </mat-form-field>
 
             <br>
@@ -18,12 +18,11 @@
                 <input matInput type='password' placeholder="Password" name="password" formControlName='password'>
             </mat-form-field>
 
-
             <div mat-dialog-actions fxLayoutAlign='space-around'>
                 <button color='warn' mat-raised-button mat-dialog-close>Cancel</button>
-                <button color='primary' mat-raised-button (click)="register()" [disabled]='registerForm.invalid'>Register</button>
+                <button color='primary' mat-raised-button (click)="register()"
+                    [disabled]='registerForm.invalid'>Register</button>
             </div>
-
         </form>
     </div>
 

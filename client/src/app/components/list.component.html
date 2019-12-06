@@ -1,0 +1,68 @@
+<div fxLayoutAlign='space-around center'>
+    <form [formGroup]='listingForm' enctype="multipart/form-data" fxLayout='column' fxLayoutAlign=' center'
+        class="listingForm" (ngSubmit)='processForm(listingForm.value)'>
+        <h1>I have..</h1>
+
+        <mat-form-field style='width:20vw'>
+            <input matInput placeholder='Listing title' type='text' name='listingTitle' formControlName='listingTitle'>
+        </mat-form-field>
+
+        <mat-form-field style='width:20vw'>
+            <textarea matInput placeholder='Listing description' name='listingDescription'
+                formControlName='listingDescription' cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"></textarea>
+        </mat-form-field>
+
+
+        <mat-form-field style='width:20vw'>
+            <mat-label>Category</mat-label>
+            <mat-select formControlName='category' (selectionChange)='doSomething($event.value)'>
+                <mat-option *ngFor="let c of categories" [value]="c.name">
+                    {{c.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf='subCategories' style='width:20vw'>
+            <mat-label>Subcategory</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let s of subCategories" [value]="s">
+                    {{s}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <div fxLayoutAlign='space-between center' fxLayout='row' style='width:20vw'>
+
+            <mat-checkbox formControlName='exactMatch'>Exact match?</mat-checkbox>
+            <button mat-raised-button color='primary'>List it!</button>
+        </div>
+    </form>
+
+    <img src='./assets/arrow.png' class='arrow'>
+
+    <form [formGroup]='listingForm' enctype="multipart/form-data" fxLayout='column' fxLayoutAlign=' center'
+        class="listingForm" (ngSubmit)='processForm(listingForm.value)'>
+        <h1>I want..</h1>
+
+        <mat-form-field style='width:20vw'>
+            <mat-label>Category</mat-label>
+            <mat-select formControlName='category' (selectionChange)='doSomething($event.value)'>
+                <mat-option *ngFor="let c of categories" [value]="c.name">
+                    {{c.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field *ngIf='subCategories' style='width:20vw'>
+            <mat-label>Subcategory</mat-label>
+            <mat-select>
+                <mat-option *ngFor="let s of subCategories" [value]="s">
+                    {{s}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <button mat-raised-button color='primary'>List it!</button>
+    </form>
+</div>
