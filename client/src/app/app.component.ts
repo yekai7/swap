@@ -22,7 +22,7 @@ export class AppComponent implements OnInit, OnDestroy {
   avatar$: Subscription;
   avatarUrl = this.cookieSvc.get('avatar');
   menu;
-  searchBy = 'name';
+  searchBy = 'listing';
 
   ngOnInit() {
     this.dbSvc.getListingCategory().then(result => {
@@ -32,17 +32,13 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.cookieSvc.get('token')) {
       this.showLogin = false;
     }
+    
     this.loginStatus$ = this.dbSvc.loginStatus$.subscribe(
-      v => {
-        this.showLogin = v;
-      }
+      v => { this.showLogin = v; }
     )
 
     this.avatar$ = this.dbSvc.avatar$.subscribe(
-      v => {
-        this.avatarUrl = v;
-        console.log("avatar url is ", this.avatarUrl)
-      }
+      v => { this.avatarUrl = v; }
     )
   }
 

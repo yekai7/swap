@@ -1,12 +1,24 @@
-.listingForm {
+.listingContainer {
     /* width:80vw; */
-    border-radius: 5px;
+    border-radius: 8px;
     padding: 20px;
     margin: 50px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width:40vw;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .arrow {
     height:15vh;
     width: auto;
+}
+
+.formField {
+    width: 100%;
+}
+
+.item {
+    border-radius: 5px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    margin: 25px;
+    padding: 25px;
 }
