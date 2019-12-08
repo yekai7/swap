@@ -6,13 +6,11 @@
             <h1>I have...</h1>
             <button mat-raised-button (click)="addItem(true)" color='accent'>Add item</button>
         </div>
+        <mat-checkbox formControlName='exactMatch'>Exact match?</mat-checkbox>
 
-        <div fxLayoutAlign='space-between center' fxLayout='row'>
-            <mat-checkbox formControlName='exactMatch'>Exact match?</mat-checkbox>
-        </div>
-        <!-- <div *ngIf="wantItem.length > 0"> -->
         <div formArrayName="haveItem">
-            <div *ngFor='let item of haveItem.controls;let i = index;' [formGroup]='item' fxLayout='column' class='item'>
+            <div *ngFor='let item of haveItem.controls;let i = index;' [formGroup]='item' fxLayout='column'
+                class='item'>
                 <div fxLayout='row' fxLayoutAlign="space-between center">
                     <span>Item {{i+1}} </span>
                     <span (click)="removeItem(i,true)" fxLayoutAlign='center center'>
@@ -31,21 +29,23 @@
 
                 <mat-form-field class='formField'>
                     <mat-label>Category</mat-label>
-                    <mat-select formControlName='category' (selectionChange)='getSubCategory($event.value)' required>
+                    <mat-select formControlName='category' #cat>
                         <mat-option *ngFor="let c of categories" [value]="c.name">
                             {{c.name}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
 
-                <mat-form-field *ngIf='listingSubCat' class='formField'>
+
+                <mat-form-field class='formField' *ngIf='getSubCategory(cat)'>
                     <mat-label>Subcategory</mat-label>
                     <mat-select formControlName='listingSubCat'>
-                        <mat-option *ngFor="let s of listingSubCat" [value]="s">
+                        <mat-option *ngFor="let s of getSubCategory(cat)" [value]="s">
                             {{s}}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
+
             </div>
         </div>
     </form>
@@ -74,18 +74,17 @@
 
                         <mat-form-field class='formField'>
                             <mat-label>Category</mat-label>
-                            <mat-select formControlName='category' (selectionChange)='getSubCategory($event.value)'
-                                required>
+                            <mat-select formControlName='category' #cat>
                                 <mat-option *ngFor="let c of categories" [value]="c.name">
                                     {{c.name}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
 
-                        <mat-form-field *ngIf='listingSubCat' class='formField'>
+                        <mat-form-field class='formField' *ngIf='getSubCategory(cat)'>
                             <mat-label>Subcategory</mat-label>
                             <mat-select formControlName='listingSubCat'>
-                                <mat-option *ngFor="let s of listingSubCat" [value]="s">
+                                <mat-option *ngFor="let s of getSubCategory(cat)" [value]="s">
                                     {{s}}
                                 </mat-option>
                             </mat-select>
@@ -99,7 +98,7 @@
             <button mat-raised-button color='primary' style='width:7vw' [disabled]="haveForm.invalid" type="submit"
                 (click)="undecidedListing()">Undecided</button>
             <button mat-raised-button color='primary' style='width:7vw'
-                [disabled]="haveForm.invalid || wantForm.invalid" (click)="processListing()">List
+                [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length " (click)="processListing()">List
                 it!</button>
         </div>
     </div>

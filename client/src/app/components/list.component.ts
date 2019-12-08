@@ -12,8 +12,6 @@ export class ListComponent implements OnInit {
   constructor(private dbSvc: DBService, private fb: FormBuilder) { }
 
   categories;
-  listingSubCat;
-  anotherSubCat;
 
   haveForm: FormGroup;
   haveItem: FormArray;
@@ -23,7 +21,7 @@ export class ListComponent implements OnInit {
 
 
   ngOnInit() {
-    this.dbSvc.getListingCategory().then(result => { this.categories = result })
+    this.dbSvc.getListingCategory().then(result => { this.categories = result; console.log(this.categories) })
       .catch(err => { console.log(err) })
     this.haveItem = this.fb.array([]);
     this.haveForm = this.createListingForm(this.haveItem);
@@ -32,6 +30,7 @@ export class ListComponent implements OnInit {
     this.wantItem = this.fb.array([]);
     this.wantForm = this.createWantForm(this.wantItem);
     this.addItem();
+
   }
 
   addItem(mode: boolean = false) {
@@ -111,20 +110,15 @@ export class ListComponent implements OnInit {
     console.log("FORM ", listing)
   }
 
-  private getSubCategory(value) {
+
+  getSubCategory(event) {
     for (const i in this.categories) {
-      if (this.categories[i].name == value) {
-        this.listingSubCat = this.categories[i].subCategories;
+      if (this.categories[i].name == event.value) {
+        return this.categories[i].subCategories;
       }
     }
   }
 
-  private getAnotherSubCat(value) {
-    for (const i in this.categories) {
-      if (this.categories[i].name == value) {
-        this.anotherSubCat = this.categories[i].subCategories;
-      }
-    }
-  }
+
 
 }
