@@ -124,9 +124,8 @@ export class ListComponent implements OnInit {
 
   getSubCategory(event) {
     for (const i in this.categories) {
-      if (this.categories[i].name == event.value) {
+      if (this.categories[i].name == event.value)
         return this.categories[i].subCategories;
-      }
     }
   }
 }
