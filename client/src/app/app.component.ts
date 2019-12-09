@@ -19,8 +19,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loginStatus$: Subscription;
   showLogin = true;
-  avatar$: Subscription;
-  avatarUrl = this.cookieSvc.get('avatar');
+  userDetails$: Subscription;
+  avatarUrl;
   menu;
   searchBy = 'listing';
 
@@ -32,19 +32,22 @@ export class AppComponent implements OnInit, OnDestroy {
     if (this.cookieSvc.get('token')) {
       this.showLogin = false;
     }
-    
+
     this.loginStatus$ = this.dbSvc.loginStatus$.subscribe(
       v => { this.showLogin = v; }
     )
 
-    this.avatar$ = this.dbSvc.avatar$.subscribe(
-      v => { this.avatarUrl = v; }
+    this.userDetails$ = this.dbSvc.userDetails$.subscribe(
+      v => {
+        this.avatarUrl = JSON.parse(v)['avatar']
+        console.log("V is", this.avatarUrl);
+      }
     )
   }
 
   ngOnDestroy() {
     this.loginStatus$.unsubscribe();
-    this.avatar$.unsubscribe();
+    this.userDetails$.unsubscribe();
   }
 
   openDialog(method: string) {

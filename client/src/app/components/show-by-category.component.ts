@@ -11,10 +11,20 @@ export class ShowByCategoryComponent implements OnInit {
 
   constructor(private aRoute: ActivatedRoute, private dbSvc: DBService) { }
   listings;
+  category;
 
   ngOnInit() {
     this.aRoute.paramMap.subscribe(params => {
-      console.log(params.get('name'))
+      this.category = params.get('name');
+      this.getListing();
+    })
+
+
+  }
+
+  getListing() {
+    this.dbSvc.getListingByCategory(this.category).then(result => {
+      this.listings = result;
     })
   }
 

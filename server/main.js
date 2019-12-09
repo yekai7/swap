@@ -86,6 +86,34 @@ app.get('/categories', (req, resp) => {
         })
 })
 
+app.post('/listing', express.json(), (req, resp) => {
+    connection.mongodb.db('swapIt').collection('listing')
+        .insertOne(req.body)
+        .then(() => {
+            console.log("REQ BODY", req.body)
+            resp.status(200).send(req.body)
+        })
+})
+
+app.get('/listings/:category', (req, resp) => {
+    const category = req.params.category;
+    console.log("category is", category);
+    connection.mongodb.db('swapIt').collection('listing')
+        .aggregate([
+            {
+                $match: {
+                    "haveItem.category": category
+                }
+            }
+        ])
+        .toArray()
+        .then(result=>{
+            console.log("search result is ",result)
+            resp.status(200).send(result);
+        })
+})
+
+
 testConn(connection).then(result => {
     console.log(result)
     app.listen(PORT, () => {

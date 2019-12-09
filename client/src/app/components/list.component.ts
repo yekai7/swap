@@ -1,6 +1,8 @@
+import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { DBService } from '../db.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-list',
@@ -9,7 +11,8 @@ import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 })
 export class ListComponent implements OnInit {
 
-  constructor(private dbSvc: DBService, private fb: FormBuilder) { }
+  constructor(private dbSvc: DBService, private fb: FormBuilder, private router: Router, 
+    private cookieSvc: CookieService) { }
 
   categories;
 
@@ -19,9 +22,10 @@ export class ListComponent implements OnInit {
   wantForm: FormGroup;
   wantItem: FormArray;
 
+  userDetail;
 
   ngOnInit() {
-    this.dbSvc.getListingCategory().then(result => { this.categories = result; console.log(this.categories) })
+    this.dbSvc.getListingCategory().then(result => { this.categories = result })
       .catch(err => { console.log(err) })
     this.haveItem = this.fb.array([]);
     this.haveForm = this.createListingForm(this.haveItem);
@@ -30,7 +34,6 @@ export class ListComponent implements OnInit {
     this.wantItem = this.fb.array([]);
     this.wantForm = this.createWantForm(this.wantItem);
     this.addItem();
-
   }
 
   addItem(mode: boolean = false) {
@@ -79,37 +82,45 @@ export class ListComponent implements OnInit {
     )
   }
 
-  undecidedListing(form) {
-    const listing = {
-      undecided: true,
-      haveItem: []
-    }
-    for (let i = 0; i < this.haveItem.length; i++) {
-      const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
-      listing.haveItem.push(fg.value)
-    }
-  }
+  processListing(mode) {
+    let listing;
+    const user = JSON.parse(this.cookieSvc.get('userDetail'));
 
-  processListing(form) {
-    const listing = {
-      undecided: false,
-      exactMatch: this.haveForm.value.exactMatch,
-      haveItem: [],
-      wantItem: []
+    if (mode) {
+      listing = {
+        listingBy: user.email, 
+        undecided: false,
+        exactMatch: this.haveForm.value.exactMatch,
+        haveItem: [],
+        wantItem: []
+      }
+      for (let i = 0; i < this.haveItem.length; i++) {
+        const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
+        listing.haveItem.push(fg.value)
+      }
+      for (let i = 0; i < this.wantItem.length; i++) {
+        const fg: FormGroup = this.wantItem.controls[i] as FormGroup;
+        listing.wantItem.push(fg.value)
+      }
+    } else {
+      listing = {
+        listingBy: user.email,
+        undecided: true,
+        haveItem: []
+      }
+      for (let i = 0; i < this.haveItem.length; i++) {
+        const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
+        listing.haveItem.push(fg.value)
+      }
     }
-    for (let i = 0; i < this.haveItem.length; i++) {
-      const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
-      listing.haveItem.push(fg.value)
-    }
-
-    for (let i = 0; i < this.wantItem.length; i++) {
-      const fg: FormGroup = this.wantItem.controls[i] as FormGroup;
-      listing.wantItem.push(fg.value)
-    }
-
+    this.dbSvc.postListing(listing).then(result => {
+      alert(`Listing have been added.`)
+      this.router.navigate(['/']);
+    }).catch(err => {
+      console.log(err);
+    })
     console.log("FORM ", listing)
   }
-
 
   getSubCategory(event) {
     for (const i in this.categories) {
@@ -118,7 +129,4 @@ export class ListComponent implements OnInit {
       }
     }
   }
-
-
-
 }

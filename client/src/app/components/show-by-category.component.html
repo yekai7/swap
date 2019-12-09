@@ -1,1 +1,7 @@
-<p>show-by-category works!</p>
+<table *ngIf="listings">
+    <tr *ngFor="let list of listings">
+        <td *ngFor="let a of list.haveItem">
+            {{a.listingTitle}}
+        </td>
+    </tr>
+</table>

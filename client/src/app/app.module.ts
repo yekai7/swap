@@ -14,6 +14,7 @@ import { RegisterComponent } from './components/register.component';
 import { ShowByCategoryComponent } from './components/show-by-category.component';
 import { CookieService } from 'ngx-cookie-service';
 import { ListComponent } from './components/list.component';
+import { MatchListingComponent } from './components/match-listing.component';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ListComponent } from './components/list.component';
     LoginComponent,
     RegisterComponent,
     ShowByCategoryComponent,
-    ListComponent
+    ListComponent,
+    MatchListingComponent
   ],
   imports: [
     BrowserModule,

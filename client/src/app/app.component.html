@@ -7,7 +7,7 @@
 
     <div class='search-bar' fxLayoutAlign=' center'>
       <form>
-        <mat-form-field style='width:5vw;' color='primary'>
+        <mat-form-field style='width:7vw;' color='primary'>
           <mat-select [(value)]="searchBy">
             <mat-option value="listing">Listing</mat-option>
             <mat-option value="category">Category</mat-option>
@@ -30,10 +30,32 @@
         <button mat-raised-button (click)="openDialog('register')" color='primary'>Register</button>
       </div>
 
-      <img [src]='avatarUrl' class='avatar' *ngIf='avatarUrl'>
-      <div *ngIf='!showLogin' fxLayoutGap='0.5vw'>
-        <button mat-raised-button [routerLink]="['list']" color='primary'>List</button>
-        <button mat-raised-button (click)='logout()' color='primary'>Logout</button>
+      <div *ngIf='!showLogin' fxLayoutGap='1vw' fxLayoutAlign='space-around center'>
+        <button mat-raised-button [routerLink]="['list']" color='primary'>
+          <span>Post listing</span>
+        </button>
+
+        <button mat-raised-button [routerLink]="['match']" color='primary'>
+          <span>Match listing</span>
+        </button>
+
+        <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
+          <span>Menu</span>
+        </button>
+        <img [src]='avatarUrl' class='avatar' *ngIf='avatarUrl'>
+
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item>
+            <mat-icon>dialpad</mat-icon>
+            <span>User settings</span>
+          </button>
+  
+          <button mat-menu-item (click)="logout()"> 
+            <mat-icon>notifications_off</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+
       </div>
     </div>
 

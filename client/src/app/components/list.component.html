@@ -94,11 +94,12 @@
             </div>
         </form>
 
-        <div fxLayoutGap='3vw' fxLayoutAlign='center center'>
-            <button mat-raised-button color='primary' style='width:7vw' [disabled]="haveForm.invalid" type="submit"
-                (click)="undecidedListing()">Undecided</button>
-            <button mat-raised-button color='primary' style='width:7vw'
-                [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length " (click)="processListing()">List
+        <div fxLayoutGap='2vw' fxLayoutAlign='center center' *ngIf='haveItem.length'>
+            <button mat-raised-button color='primary' style='width:40%' [disabled]="haveForm.invalid" type="submit"
+                (click)="processListing()">Undecided, offer me.</button>
+            <button mat-raised-button color='primary' style='width:40%'
+                [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length " (click)="processListing(true)"
+                *ngIf='wantItem.length'>List
                 it!</button>
         </div>
     </div>
