@@ -1,1 +1,45 @@
-<p>{{user.name}}</p>
+<div class='listingContainer'>
+    <h1 *ngIf='userListings'>Your listings</h1>
+    <div fxLayout='row' fxLayoutAlign='space-around center'>
+        <mat-card class="item" *ngFor='let listing of userListings'>
+
+            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg"
+                alt="Photo of a Shiba Inu" class='listingImg'> -->
+            <mat-card-content fxLayout='column'>
+                <div>
+                    <h1>Have</h1>
+                    <div *ngFor="let haveItem of listing.haveItem" fxLayout='row'>
+                        <div>
+                            <h2>{{haveItem.listingTitle}}</h2>
+                            <p>{{haveItem.category}}</p>
+                            <p>{{haveItem.listingSubCat}}</p>
+                        </div>
+                        <p>{{haveItem.listingDescription}}</p>
+
+                    </div>
+                </div>
+                <div>
+                    <h1>Want</h1>
+                    <div *ngFor="let wantItem of listing.wantItem" fxLayout='column'>
+                        <h2>{{wantItem.listingTitle}}</h2>
+                        <p>{{wantItem.listingDescription}}</p>
+                        <p>{{wantItem.category}}</p>
+                        <p>{{wantItem.listingSubCat}}</p>
+                    </div>
+                </div>
+
+            </mat-card-content>
+            <mat-card-actions>
+                <button mat-raised-button color='primary'>LIKE</button>
+                <button mat-raised-button color='primary'>LIKE</button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+
+    <div *ngIf='!userListings'>
+        <h1>No listing available.</h1>
+        <button mat-raised-button [routerLink]="['list']" color='primary'>
+            <span>Post listing</span>
+        </button>
+    </div>
+</div>

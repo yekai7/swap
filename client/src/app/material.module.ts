@@ -8,10 +8,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatCardModule } from '@angular/material/card';
 const MODULE = [
     MatInputModule, MatToolbarModule, MatButtonModule,
-    MatFormFieldModule,
+    MatFormFieldModule, MatCardModule,
     MatIconModule, MatDialogModule,
     MatSelectModule,
     MatMenuModule, MatCheckboxModule

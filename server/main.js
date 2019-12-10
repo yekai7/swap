@@ -95,20 +95,36 @@ app.post('/listing', express.json(), (req, resp) => {
         })
 })
 
-app.get('/listings/:category', (req, resp) => {
-    const category = req.params.category;
-    console.log("category is", category);
+// app.get('/listings/:category', (req, resp) => {
+//     const category = req.params.category;
+//     console.log("category is", category);
+//     connection.mongodb.db('swapIt').collection('listing')
+//         .aggregate([
+//             {
+//                 $match: {
+//                     "haveItem.category": category
+//                 }
+//             }
+//         ])
+//         .toArray()
+//         .then(result=>{
+//             console.log("search result is ",result)
+//             resp.status(200).send(result);
+//         })
+// })
+
+app.get('/:user/listings', (req, resp)=>{
+    const user = req.params.user;
     connection.mongodb.db('swapIt').collection('listing')
-        .aggregate([
-            {
-                $match: {
-                    "haveItem.category": category
-                }
-            }
-        ])
+        .find({
+            listingBy: user
+        })
         .toArray()
         .then(result=>{
-            console.log("search result is ",result)
+            console.log('Result from find user listing', result)
+            console.log(result.length)
+            if (result.length == 0)
+                return resp.status(404).send({message:'No listing for this user'})
             resp.status(200).send(result);
         })
 })

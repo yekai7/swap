@@ -59,4 +59,8 @@ export class DBService {
   postListing(listing) {
     return this.http.post(`${this.url}/listing`, listing).toPromise();
   }
+
+  getUserListing(user){
+    return this.http.get(`${this.url}/${user}/listings`).toPromise();
+  }
 }
