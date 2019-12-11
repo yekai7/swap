@@ -2,22 +2,16 @@
     border-radius: 8px;
     padding: 20px;
     margin: 50px;
-    width:90%;
+    width:90vw;
     min-height: calc(100vh - 10vh);
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-    display: inline-block;
 }
 
 .item {
     border-radius: 5px;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.4);
     margin: 25px;
     padding: 25px;
-    width:90%;
-}
-
-.listItems {
-    width: 25vw;
 }
 
 .category {
@@ -28,3 +22,8 @@
     width:100%;
     display:block;
 }
+
+
+.myClass{
+    color : red;
+  }

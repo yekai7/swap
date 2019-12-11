@@ -54,9 +54,13 @@
     <div class="listingContainer" fxLayout='column' class="listingContainer">
         <form [formGroup]='wantForm'>
             <div fxLayout='row' fxLayoutAlign="space-between">
-                <h1>I want...</h1>
+                <h1 *ngIf='wantItem.length'>I want...</h1>
+                <div *ngIf='wantItem.length == 0' fxLayout='row'>
+                    <h1>I haven't decide yet</h1>
+                </div>
                 <button mat-raised-button (click)="addItem()" color='accent'>Add item</button>
             </div>
+
             <div *ngIf="wantItem.length > 0">
                 <div formArrayName="wantItem">
                     <div *ngFor='let item of wantItem.controls;let t = index;' [formGroup]='item' fxLayout='column'
@@ -95,11 +99,11 @@
         </form>
 
         <div fxLayoutGap='2vw' fxLayoutAlign='center center' *ngIf='haveItem.length'>
-            <button mat-raised-button color='primary' style='width:40%' [disabled]="haveForm.invalid" type="submit"
-                (click)="processListing()">Undecided, offer me.</button>
+            <button mat-raised-button color='primary' style='width:40%' color='warn' [disabled]="haveForm.invalid"
+                type="submit" (click)="processListing()">Undecided, offer me.</button>
             <button mat-raised-button color='primary' style='width:40%'
-                [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length " (click)="processListing(true)"
-                *ngIf='wantItem.length'>List
+                [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length" color='warn'
+                (click)="processListing(false)" *ngIf='wantItem.length'>List
                 it!</button>
         </div>
     </div>

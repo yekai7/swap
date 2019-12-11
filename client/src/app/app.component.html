@@ -65,7 +65,7 @@
   </div>
   <div class='category-bar'>
     <div *ngFor='let m of menu'>
-      <button mat-button color='warn' [routerLink]="['category', m.name]">{{m.name}}</button>
+      <button mat-button color='warn' [routerLink]="['category', m.name]" class='menuButton'>{{m.name}}</button>
     </div>
   </div>
   <router-outlet></router-outlet>

@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
     this.dbSvc.loginUser(this.loginForm.value).then(result=>{
       if(result==401)
         return alert("Login failed")
-      alert(`You are logged in.`)
     }).catch(err=>{
       alert(err)
     })

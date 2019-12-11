@@ -1,7 +1,13 @@
 <div class='listingContainer'>
-    <h1 *ngIf='userListings'>Your listings</h1>
-
-    <div *ngFor='let listing of userListings' class='item' fxLayout='row' fxLayoutAlign='space-between'>
+    <div fxLayout='row' fxLayoutAlign='space-between center'>
+        <h1 *ngIf='userListings'>Your listings</h1>
+        <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
+            <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
+            <button mat-mini-fab *ngFor='let p of pageCount' (click)="pagination(p)">{{p+1}}</button>
+            <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
+        </div>
+    </div>
+    <div *ngFor='let listing of userListings' class='item' fxLayout='row'>
 
         <div style='width:40%'>
             <h2>Have Item</h2>
@@ -28,48 +34,53 @@
         </div>
 
         <div style='width:20%;' fxLayout='column' fxLayoutAlign='space-between'>
-            <div fxLayout='row' fxLayoutAlign=' center'>
-                <p>Open to all?</p>
-                <div *ngIf='listing.openToAll'>
-                    <mat-icon>check</mat-icon>
+            <div>
+                <div fxLayout='row' fxLayoutAlign='space-between center'>
+                    <span>No particular item in mind?</span>
+                    <div *ngIf='listing.openToAll'>
+                        <mat-icon>check</mat-icon>
+                    </div>
+                    <div *ngIf='!listing.openToAll'>
+                        <mat-icon>close</mat-icon>
+                    </div>
                 </div>
-                <div *ngIf='!listing.openToAll'>
-                    <mat-icon>close</mat-icon>
+                <div fxLayout='row' fxLayoutAlign='space-between center'>
+                    <span>Exact match to listing title?</span>
+                    <div *ngIf='listing.exactMatch'>
+                        <mat-icon>check</mat-icon>
+                    </div>
+                    <div *ngIf='!listing.exactMatch'>
+                        <mat-icon>close</mat-icon>
+                    </div>
+                </div>
+                <div fxLayout='row' fxLayoutAlign='space-between center'>
+                    <span>Listed on:</span>
+                    <span>{{listing.listDate}}</span>
                 </div>
             </div>
-            <div fxLayout='row' fxLayoutAlign=' center'>
-                <p>Exact Match?</p>
-                <div *ngIf='listing.exactMatch'>
-                    <mat-icon>check</mat-icon>
-                </div>
-                <div *ngIf='!listing.exactMatch'>
-                    <mat-icon>close</mat-icon>
-                </div>
-            </div>
-            <div fxLayout='row' fxLayout='space-between'>
-                <button mat-raised-button color='warn' class='button'>Match!</button>
-                <button mat-icon-button color='primary' [matMenuTriggerFor]="menu"
-                    aria-label="Example icon-button with a menu">
+
+            <div fxLayout='row' fxLayoutAlign='end'>
+                <button mat-raised-button color='warn' *ngIf='listing.wantItem' class='button'>Match!</button>
+                <button mat-icon-button color='primary' [matMenuTriggerFor]=" menu">
                     <mat-icon>more_vert</mat-icon>
                 </button>
                 <mat-menu #menu="matMenu">
                     <button mat-menu-item>
-                        <mat-icon>dialpad</mat-icon>
+                        <mat-icon>build</mat-icon>
                         <span>Edit</span>
                     </button>
-                    <button mat-menu-item>
-                        <mat-icon>close</mat-icon>
+                    <button mat-menu-item (click)='delete(listing)'>
+                        <mat-icon>delete_forever</mat-icon>
                         <span>Delete</span>
                     </button>
                 </mat-menu>
             </div>
         </div>
     </div>
-</div>
-
-<div *ngIf='!userListings'>
-    <h1>No listing available.</h1>
-    <button mat-raised-button [routerLink]="['list']" color='primary'>
-        <span>Post listing</span>
-    </button>
+    <div *ngIf='!userListings'>
+        <h1>No listing available.</h1>
+        <button mat-raised-button (click)='navigate()' color='primary'>
+            <span>Post listing</span>
+        </button>
+    </div>
 </div>

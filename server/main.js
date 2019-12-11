@@ -1,12 +1,15 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
-const genToken = require('./genToken');
-const dbConfig = require('./readSetDbConfig');
+const { genToken, verifyToken } = require('./tokenSvc');
 
+const dbConfig = require('./readSetDbConfig');
 const mkQuery = require('./dbUtil');
 const { loadDB, testConn } = require('./initDB');
 const connection = loadDB(dbConfig());
+const ObjectID = require('mongodb').ObjectID;
+
+
 const REGISTER_USER = 'insert into users(email, name, password, avatar) values (?, ?, sha2(?,256), ?)';
 const FIND_USER = 'select count(*) as user_count from users where email = ? and password = sha2(?, 256)';
 const GET_USER_DETAIL = 'select email, name, avatar, date_joined from users where email = ?';
@@ -63,10 +66,17 @@ app.get('/failedAuth', (req, resp) => {
 app.post('/register', express.json(), (req, resp) => {
     const formData = req.body
     const avatar = `https://avatars.dicebear.com/v2/avataaars/${formData.name}.svg`
+
     registerUser([formData.email, formData.name, formData.password, avatar])
         .then(result => {
-            const token = genToken(req.user);
-            resp.status(201).send({ token_type: 'Bearer', access_token: token, userDetail: result })
+            const token = genToken(formData.email);
+            return token
+        })
+        .then((token) => {
+            getUserDetail([formData.email]).then(result => {
+                console.log(result)
+                resp.status(200).json({ token_type: 'Bearer', access_token: token, userDetail: result })
+            })
         }).catch(err => {
             if (err.errno == 1062)
                 return resp.status(409).send({ message: 'Email already taken' })
@@ -113,26 +123,53 @@ app.post('/listing', express.json(), (req, resp) => {
 //         })
 // })
 
-app.get('/:user/listings', (req, resp)=>{
+app.get('/:user/listings', (req, resp) => {
     const user = req.params.user;
     connection.mongodb.db('swapIt').collection('listing')
         .find({
             listingBy: user
         })
+        .sort({
+            listDate: -1
+        })
         .toArray()
-        .then(result=>{
+        .then(result => {
             if (result.length == 0)
-                return resp.status(404).send({message:'No listing for this user'})
-            const data = result.map(v=>{
+                return resp.status(404).send({ message: 'No listing for this user' })
+            const data = result.map(v => {
                 date = new Date(v.listDate)
                 v.listDate = date.toLocaleDateString('en-US');
                 return v
             })
-            console.log('Result from find user listing', data)
             resp.status(200).send(data);
         })
 })
 
+const authToken = (req, resp, next) => {
+    const auth = req.get('Authorization');
+    if (!auth && auth.startsWith('Bearer '))
+        return resp.status(403).json({ message: "Unauthorised action." })
+    const token = auth.substring('Bearer '.length)
+    verifyToken(token).then(result => {
+        console.log("authstatus is ", result)
+        if (result)
+            return next();
+        resp.status(401).send({ message: "Invalid token" })
+    })
+}
+
+app.delete('/listing', authToken, (req, resp) => {
+    connection.mongodb.db('swapIt').collection('listing')
+        .deleteOne({
+            "_id": ObjectID(req.query.id)
+        })
+        .then(result=>{
+            resp.status(200).send(result)
+        })
+        .catch(err=>{
+            resp.status(400).send(err)
+        })
+})
 
 testConn(connection).then(result => {
     console.log(result)

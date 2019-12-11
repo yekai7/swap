@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class ListComponent implements OnInit {
 
-  constructor(private dbSvc: DBService, private fb: FormBuilder, private router: Router, 
+  constructor(private dbSvc: DBService, private fb: FormBuilder, private router: Router,
     private cookieSvc: CookieService) { }
 
   categories;
@@ -82,44 +82,33 @@ export class ListComponent implements OnInit {
     )
   }
 
-  processListing(mode) {
-    let listing;
+  processListing(undecided = true) {
     const user = JSON.parse(this.cookieSvc.get('userDetail'));
-
-    if (mode) {
-      listing = {
-        listingBy: user.email, 
-        undecided: false,
-        exactMatch: this.haveForm.value.exactMatch,
-        haveItem: [],
-        wantItem: []
-      }
-      for (let i = 0; i < this.haveItem.length; i++) {
-        const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
-        listing.haveItem.push(fg.value)
-      }
+    let listing = {
+      listingBy: user.email,
+      openToAll: undecided,
+      exactMatch: this.haveForm.value.exactMatch,
+      listDate: new Date().getTime(),
+      haveItem: []
+    }
+    for (let i = 0; i < this.haveItem.length; i++) {
+      const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
+      listing.haveItem.push(fg.value)
+    }
+    if (!undecided) {
+      listing['wantItem'] = [];
       for (let i = 0; i < this.wantItem.length; i++) {
         const fg: FormGroup = this.wantItem.controls[i] as FormGroup;
-        listing.wantItem.push(fg.value)
-      }
-    } else {
-      listing = {
-        listingBy: user.email,
-        undecided: true,
-        haveItem: []
-      }
-      for (let i = 0; i < this.haveItem.length; i++) {
-        const fg: FormGroup = this.haveItem.controls[i] as FormGroup;
-        listing.haveItem.push(fg.value)
+        listing['wantItem'].push(fg.value)
       }
     }
+
     this.dbSvc.postListing(listing).then(result => {
       alert(`Listing have been added.`)
-      this.router.navigate(['/']);
+      this.router.navigate(['/match']);
     }).catch(err => {
       console.log(err);
     })
-    console.log("FORM ", listing)
   }
 
   getSubCategory(event) {

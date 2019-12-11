@@ -20,9 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
   loginStatus$: Subscription;
   showLogin = true;
   userDetails$: Subscription;
-  user = JSON.parse(this.cookieSvc.get('userDetail'));
-  avatarUrl = this.user['avatar'];
-  name = this.user['name'];
+  user;
+  avatarUrl;
+  name;
   menu;
   searchBy = 'listing';
 
@@ -33,6 +33,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
     if (this.cookieSvc.get('token')) {
       this.showLogin = false;
+      this.avatarUrl = JSON.parse(this.cookieSvc.get('userDetail'))['avatar']
+      this.name = JSON.parse(this.cookieSvc.get('userDetail'))['name']
     }
 
     this.loginStatus$ = this.dbSvc.loginStatus$.subscribe(
@@ -43,8 +45,6 @@ export class AppComponent implements OnInit, OnDestroy {
       v => {
         this.avatarUrl = JSON.parse(v)['avatar']
         this.name = JSON.parse(v)['name']
-        console.log("AVATAR IS", this.avatarUrl);
-        return v
       }
     )
   }
@@ -65,6 +65,8 @@ export class AppComponent implements OnInit, OnDestroy {
   logout() {
     this.showLogin = true;
     this.avatarUrl = ''
+    this.user = '';
+    this.name = '';
     this.cookieSvc.deleteAll();
     this.router.navigate(['/'])
   }
