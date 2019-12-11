@@ -121,11 +121,15 @@ app.get('/:user/listings', (req, resp)=>{
         })
         .toArray()
         .then(result=>{
-            console.log('Result from find user listing', result)
-            console.log(result.length)
             if (result.length == 0)
                 return resp.status(404).send({message:'No listing for this user'})
-            resp.status(200).send(result);
+            const data = result.map(v=>{
+                date = new Date(v.listDate)
+                v.listDate = date.toLocaleDateString('en-US');
+                return v
+            })
+            console.log('Result from find user listing', data)
+            resp.status(200).send(data);
         })
 })
 

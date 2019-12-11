@@ -20,7 +20,9 @@ export class AppComponent implements OnInit, OnDestroy {
   loginStatus$: Subscription;
   showLogin = true;
   userDetails$: Subscription;
-  avatarUrl;
+  user = JSON.parse(this.cookieSvc.get('userDetail'));
+  avatarUrl = this.user['avatar'];
+  name = this.user['name'];
   menu;
   searchBy = 'listing';
 
@@ -40,7 +42,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.userDetails$ = this.dbSvc.userDetails$.subscribe(
       v => {
         this.avatarUrl = JSON.parse(v)['avatar']
-        console.log("V is", this.avatarUrl);
+        this.name = JSON.parse(v)['name']
+        console.log("AVATAR IS", this.avatarUrl);
+        return v
       }
     )
   }

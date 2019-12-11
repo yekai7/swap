@@ -1,45 +1,75 @@
 <div class='listingContainer'>
     <h1 *ngIf='userListings'>Your listings</h1>
-    <div fxLayout='row' fxLayoutAlign='space-around center'>
-        <mat-card class="item" *ngFor='let listing of userListings'>
 
-            <!-- <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg"
-                alt="Photo of a Shiba Inu" class='listingImg'> -->
-            <mat-card-content fxLayout='column'>
-                <div>
-                    <h1>Have</h1>
-                    <div *ngFor="let haveItem of listing.haveItem" fxLayout='row'>
-                        <div>
-                            <h2>{{haveItem.listingTitle}}</h2>
-                            <p>{{haveItem.category}}</p>
-                            <p>{{haveItem.listingSubCat}}</p>
-                        </div>
-                        <p>{{haveItem.listingDescription}}</p>
+    <div *ngFor='let listing of userListings' class='item' fxLayout='row' fxLayoutAlign='space-between'>
 
-                    </div>
+        <div style='width:40%'>
+            <h2>Have Item</h2>
+            <div *ngFor='let haveItem of listing.haveItem; let i=index' fxLayout='column'>
+                <h3>{{i+1}} - {{haveItem.listingTitle}}</h3>
+                <div fxLayoutAlign=' center'>
+                    <span class='category'>Category: {{haveItem.category}} ></span>
+                    <span class='category'>{{haveItem.listingSubCat}}</span>
                 </div>
-                <div>
-                    <h1>Want</h1>
-                    <div *ngFor="let wantItem of listing.wantItem" fxLayout='column'>
-                        <h2>{{wantItem.listingTitle}}</h2>
-                        <p>{{wantItem.listingDescription}}</p>
-                        <p>{{wantItem.category}}</p>
-                        <p>{{wantItem.listingSubCat}}</p>
-                    </div>
+                <p><i>{{haveItem.listingDescription}}</i></p>
+            </div>
+        </div>
+
+        <div style='width:40%'>
+            <h2>Want Item</h2>
+            <div *ngFor='let wantItem of listing.wantItem; let i=index' fxLayout='column'>
+                <h3>{{i+1}} - {{wantItem.listingTitle}}</h3>
+                <div fxLayoutAlign=' center'>
+                    <span class='category'>Category: {{wantItem.category}} ></span>
+                    <span class='category'>{{wantItem.listingSubCat}}</span>
                 </div>
+                <p><i>{{wantItem.listingDescription}}</i></p>
+            </div>
+        </div>
 
-            </mat-card-content>
-            <mat-card-actions>
-                <button mat-raised-button color='primary'>LIKE</button>
-                <button mat-raised-button color='primary'>LIKE</button>
-            </mat-card-actions>
-        </mat-card>
+        <div style='width:20%;' fxLayout='column' fxLayoutAlign='space-between'>
+            <div fxLayout='row' fxLayoutAlign=' center'>
+                <p>Open to all?</p>
+                <div *ngIf='listing.openToAll'>
+                    <mat-icon>check</mat-icon>
+                </div>
+                <div *ngIf='!listing.openToAll'>
+                    <mat-icon>close</mat-icon>
+                </div>
+            </div>
+            <div fxLayout='row' fxLayoutAlign=' center'>
+                <p>Exact Match?</p>
+                <div *ngIf='listing.exactMatch'>
+                    <mat-icon>check</mat-icon>
+                </div>
+                <div *ngIf='!listing.exactMatch'>
+                    <mat-icon>close</mat-icon>
+                </div>
+            </div>
+            <div fxLayout='row' fxLayout='space-between'>
+                <button mat-raised-button color='warn' class='button'>Match!</button>
+                <button mat-icon-button color='primary' [matMenuTriggerFor]="menu"
+                    aria-label="Example icon-button with a menu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item>
+                        <mat-icon>dialpad</mat-icon>
+                        <span>Edit</span>
+                    </button>
+                    <button mat-menu-item>
+                        <mat-icon>close</mat-icon>
+                        <span>Delete</span>
+                    </button>
+                </mat-menu>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div *ngIf='!userListings'>
-        <h1>No listing available.</h1>
-        <button mat-raised-button [routerLink]="['list']" color='primary'>
-            <span>Post listing</span>
-        </button>
-    </div>
+<div *ngIf='!userListings'>
+    <h1>No listing available.</h1>
+    <button mat-raised-button [routerLink]="['list']" color='primary'>
+        <span>Post listing</span>
+    </button>
 </div>

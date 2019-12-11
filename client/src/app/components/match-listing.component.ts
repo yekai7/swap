@@ -16,9 +16,7 @@ export class MatchListingComponent implements OnInit {
   ngOnInit() {
     this.user = JSON.parse(this.cookieSvc.get('userDetail'))
     this.dbSvc.getUserListing(this.user.email).then(result=>{
-      console.log("Result returned from svc:", result)
       this.userListings = result;
-      console.log("User listings", this.userListings)
     })
     .catch(err=>{
       console.log(err)

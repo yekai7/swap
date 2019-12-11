@@ -42,15 +42,18 @@
         <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
           <span>Menu</span>
         </button>
-        <img [src]='avatarUrl' class='avatar' *ngIf='avatarUrl'>
+        <div fxLayout='column' fxLayoutAlign=' center'>
+          <img [src]='avatarUrl' class='avatar'>
+          <span>{{name}}</span>
+        </div>
 
         <mat-menu #menu="matMenu">
           <button mat-menu-item>
             <mat-icon>settings_applications</mat-icon>
             <span>User settings</span>
           </button>
-  
-          <button mat-menu-item (click)="logout()"> 
+
+          <button mat-menu-item (click)="logout()">
             <mat-icon>close</mat-icon>
             <span>Logout</span>
           </button>
