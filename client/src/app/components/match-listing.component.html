@@ -3,7 +3,7 @@
         <h1 *ngIf='userListings'>Your listings</h1>
         <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
             <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
-            <button mat-mini-fab *ngFor='let p of pageCount' (click)="pagination(p)">{{p+1}}</button>
+            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p,i)">{{p+1}}</button>
             <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
         </div>
     </div>
@@ -60,7 +60,7 @@
             </div>
 
             <div fxLayout='row' fxLayoutAlign='end'>
-                <button mat-raised-button color='warn' *ngIf='listing.wantItem' class='button'>Match!</button>
+                <button mat-raised-button color='warn' *ngIf='listing.wantItem' class='button' (click)='match(listing)'>Match!</button>
                 <button mat-icon-button color='primary' [matMenuTriggerFor]=" menu">
                     <mat-icon>more_vert</mat-icon>
                 </button>

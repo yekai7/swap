@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
-import { Subject, Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class DBService {
@@ -14,8 +14,11 @@ export class DBService {
 
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
-    if (this.cookieSvc.get('token'))
+    if (this.cookieSvc.get('token')) {
+      console.log("TRUE path")
       return (true)
+    }
+    console.log("FALSE PATH")
     return (this.router.parseUrl('/'));
   }
 
@@ -49,12 +52,21 @@ export class DBService {
       })
   }
 
-  getListingCategory(): Promise<any> {
+  getCategory(): Promise<any> {
     return this.http.get(`${this.url}/categories`).toPromise();
   }
 
-  getListingByCategory(category) {
-    return this.http.get(`${this.url}/listings/${category}`).toPromise();
+  getSubCategory(name): Promise<any> {
+    return this.http.get(`${this.url}/categories/${name}`).toPromise();
+  }
+
+  getListingByCategory(category, unwind = false) {
+    const params = new HttpParams().set('unwind', unwind.toString());
+    return this.http.get(`${this.url}/listings/category/${category}`, { params }).toPromise();
+  }
+
+  getListingByTitle(title) {
+    return this.http.get(`${this.url}/listings/title/${title}`).toPromise();
   }
 
   postListing(listing) {
@@ -69,8 +81,12 @@ export class DBService {
     const token = this.cookieSvc.get('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     const params = new HttpParams().set('id', id);
-
-
     return this.http.delete(`${this.url}/listing`, { headers, params }).toPromise();
+  }
+
+  matchListing(id) {
+    const token = this.cookieSvc.get('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get(`${this.url}/matchListing/${id}`, { headers }).toPromise();
   }
 }

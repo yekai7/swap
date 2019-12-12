@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DBService } from '../db.service';
 import { Router } from '@angular/router';
-import { ThemePalette } from '@angular/material/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-match-listing',
@@ -11,14 +11,13 @@ import { ThemePalette } from '@angular/material/core';
 })
 export class MatchListingComponent implements OnInit {
 
-  constructor(private cookieSvc: CookieService, private dbSvc: DBService, private router: Router) { }
+  constructor(private cookieSvc: CookieService, private dbSvc: DBService, private router: Router, private _snackBar: MatSnackBar) { }
 
   user;
   fullListings;
   userListings;
   pageCount = [];
   pageNum = 0;
-  isClicked = false;
 
   ngOnInit() {
     this.user = JSON.parse(this.cookieSvc.get('userDetail'))
@@ -42,13 +41,20 @@ export class MatchListingComponent implements OnInit {
     this.dbSvc.deleteListing(listing._id)
       .then(result => {
         this.getListing()
+        this._snackBar.open('Listing deleted', 'dismiss', {
+          duration: 3000,
+        });
       })
       .catch(err => {
-        console.log("del err", err)
+        this._snackBar.open('Delete failed, please relogin.', 'dismiss', {
+          duration: 3000,
+        });
       })
   }
 
-
+  match(listing) {
+    this.router.navigate(['/matched-listings', listing._id]);
+  }
 
   pagination(pageNum) {
     this.pageNum = pageNum
@@ -58,22 +64,26 @@ export class MatchListingComponent implements OnInit {
 
   left() {
     if (this.pageNum == 0) {
-      return alert("You are at the first page of listings.")
+      return this._snackBar.open('You have reached the first page.', 'dismiss', {
+        duration: 3000,
+      });
     }
     this.pageNum--;
     this.pagination(this.pageNum);
   }
 
   right() {
-    if (this.pageNum == (this.pageCount.length-1)) {
-      return alert("You are at the last page of listings.")
+    if (this.pageNum == (this.pageCount.length - 1)) {
+      return this._snackBar.open('You have reached the last page.', 'dismiss', {
+        duration: 3000,
+      });
     }
     this.pageNum++;
     this.pagination(this.pageNum);
   }
 
-  navigate() {
-    this.router.navigate(['listing']);
+  navigate(id) {
+    this.router.navigate(['listing',id]);
   }
 
 }

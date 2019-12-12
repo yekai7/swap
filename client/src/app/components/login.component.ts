@@ -6,7 +6,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder } from '@angular/forms';
 import { DBService } from '../db.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -15,23 +14,29 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  loginForm:FormGroup;
+  loginForm: FormGroup;
 
-  constructor(private dbSvc: DBService, private fb: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>) { }
+  constructor(private dbSvc: DBService, private fb: FormBuilder, private dialogRef: MatDialogRef<LoginComponent>,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.loginForm = this.fb.group({
-      email: this.fb.control('', [ Validators.required]),
-      password: this.fb.control('', [ Validators.required])
+      email: this.fb.control('', [Validators.required]),
+      password: this.fb.control('', [Validators.required])
     });
   }
 
   login() {
     this.dialogRef.close(this.loginForm.value);
-    this.dbSvc.loginUser(this.loginForm.value).then(result=>{
-      if(result==401)
-        return alert("Login failed")
-    }).catch(err=>{
+    this.dbSvc.loginUser(this.loginForm.value).then(result => {
+      if (result == 401)
+        return this._snackBar.open('Login failed, please try again..', 'dismiss', {
+          duration: 3000,
+        });
+      this._snackBar.open('You are logged in now.', 'dismiss', {
+        duration: 3000,
+      });
+    }).catch(err => {
       alert(err)
     })
   }

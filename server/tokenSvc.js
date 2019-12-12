@@ -16,19 +16,19 @@ const genToken = (sub, data = null) => {
         data: data
     }, dbConfig().tokenSecret);
     connection.mongodb.db('swapIt').collection('tokens')
+        // .createIndex({
+        //     "createdAt": 1
+        // }, { expireAfterSeconds: 86400 })
+        // .then(result=>{
+        //     console.log(result)
+        // })
         .insertOne({
             token: token,
             createdAt: new Date()
         })
         .then(result => {
-            
+
         })
-    // .createIndex({
-    //     "createdAt": 1
-    // }, { expireAfterSeconds: 86400 })
-    // .then(result=>{
-    //     console.log(result)
-    // })
     return token
 }
 

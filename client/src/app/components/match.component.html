@@ -1,0 +1,37 @@
+<div class='listingContainer'>
+    <h1>Matched Listings</h1>
+    <div *ngIf='listings.length>0'>
+        <div *ngFor='let l of listings;let i=index' fxLayout='row' class='item'>
+            <div style='width:40%'>
+                <h2>Have Item</h2>
+                <div *ngFor='let haveItem of l.haveItem; let i=index' fxLayout='column'>
+                    <h3>{{i+1}} - {{haveItem.listingTitle}}</h3>
+                    <div fxLayoutAlign=' center'>
+                        <span class='category'>Category: {{haveItem.category}} ></span>
+                        <span class='category'>{{haveItem.listingSubCat}}</span>
+                    </div>
+                    <p><i>{{haveItem.listingDescription}}</i></p>
+                </div>
+            </div>
+
+            <div style='width:40%'>
+                <h2>Want Item</h2>
+                <div *ngFor='let wantItem of l.wantItem; let i=index' fxLayout='column'>
+                    <h3>{{i+1}} - {{wantItem.listingTitle}}</h3>
+                    <div fxLayoutAlign=' center'>
+                        <span class='category'>Category: {{wantItem.category}} ></span>
+                        <span class='category'>{{wantItem.listingSubCat}}</span>
+                    </div>
+                    <p><i>{{wantItem.listingDescription}}</i></p>
+                </div>
+            </div>
+            <div>
+                <button mat-raised-button>Contact user</button>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf='listings.length == 0'>
+        <p>No matched listing</p>
+    </div>
+</div>

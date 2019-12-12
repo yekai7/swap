@@ -1,7 +1,37 @@
-<table *ngIf="listings">
-    <tr *ngFor="let list of listings">
-        <td *ngFor="let a of list.haveItem">
-            {{a.listingTitle}}
-        </td>
-    </tr>
-</table>
+<div class='test'>
+    <div fxLayout='row' fxLayoutAlign='space-between center' class='top-bar'>
+        <h1>{{category}}</h1>
+        <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
+            <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
+            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p,i)">{{p+1}}</button>
+            <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
+        </div>
+    </div>
+
+    <div class='listingContainer'>
+        <div *ngIf='pageListing.length == 0'>No listing for this category.</div>
+        <div *ngFor='let l of pageListing'>
+            <mat-card class='card-view'>
+                <mat-card-content>
+                    <p>Listed by: {{l.listingBy}}</p>
+                    <div *ngFor='let items of l.haveItem'>
+                        <h2>{{items.listingTitle}}</h2>
+                        <p>Category: {{items.category}} > {{items.listingSubCat}}</p>
+                        <p>{{items.listingDescription}}</p>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions fxLayoutAlign='center'>
+                    <button mat-raised-button (click)='navigate(l._id)'>More Details</button>
+                    <button mat-raised-button>Message</button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+    <div fxLayout='row' fxLayoutAlign='center center' class='top-bar'>
+        <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
+            <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
+            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p,i)">{{p+1}}</button>
+            <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
+        </div>
+    </div>
+</div>

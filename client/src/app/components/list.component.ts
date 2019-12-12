@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { DBService } from '../db.service';
@@ -12,7 +13,7 @@ import { CookieService } from 'ngx-cookie-service';
 export class ListComponent implements OnInit {
 
   constructor(private dbSvc: DBService, private fb: FormBuilder, private router: Router,
-    private cookieSvc: CookieService) { }
+    private cookieSvc: CookieService, private _snackBar: MatSnackBar) { }
 
   categories;
 
@@ -104,7 +105,9 @@ export class ListComponent implements OnInit {
     }
 
     this.dbSvc.postListing(listing).then(result => {
-      alert(`Listing have been added.`)
+      this._snackBar.open('Listing have been added.', 'dismiss', {
+        duration: 3000,
+      });
       this.router.navigate(['/match']);
     }).catch(err => {
       console.log(err);

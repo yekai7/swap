@@ -30,6 +30,7 @@
                 <mat-form-field class='formField'>
                     <mat-label>Category</mat-label>
                     <mat-select formControlName='category' #cat>
+                        <mat-option value='cash'>Cash</mat-option>
                         <mat-option *ngFor="let c of categories" [value]="c.name">
                             {{c.name}}
                         </mat-option>
@@ -44,6 +45,10 @@
                             {{s}}
                         </mat-option>
                     </mat-select>
+                </mat-form-field>
+
+                <mat-form-field *ngIf="cat.value == 'cash'">
+                    <input type='number' matInput placeholder="$" formControlName='listingSubCat'>
                 </mat-form-field>
 
             </div>
@@ -79,6 +84,7 @@
                         <mat-form-field class='formField'>
                             <mat-label>Category</mat-label>
                             <mat-select formControlName='category' #cat>
+                                <mat-option value='cash'>Cash</mat-option>
                                 <mat-option *ngFor="let c of categories" [value]="c.name">
                                     {{c.name}}
                                 </mat-option>
@@ -93,6 +99,9 @@
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
+                        <mat-form-field *ngIf="cat.value == 'cash'">
+                            <input type='number' matInput placeholder="$" formControlName='listingSubCat'>
+                        </mat-form-field>
                     </div>
                 </div>
             </div>
@@ -100,7 +109,7 @@
 
         <div fxLayoutGap='2vw' fxLayoutAlign='center center' *ngIf='haveItem.length'>
             <button mat-raised-button color='primary' style='width:40%' color='warn' [disabled]="haveForm.invalid"
-                type="submit" (click)="processListing()">Undecided, offer me.</button>
+                type="submit" *ngIf='wantItem.length == 0' (click)="processListing()">Undecided, offer me.</button>
             <button mat-raised-button color='primary' style='width:40%'
                 [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length" color='warn'
                 (click)="processListing(false)" *ngIf='wantItem.length'>List

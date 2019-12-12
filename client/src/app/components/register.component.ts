@@ -1,3 +1,4 @@
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -12,7 +13,8 @@ export class RegisterComponent implements OnInit {
 
   registerForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<RegisterComponent>, private dbSvc: DBService) { }
+  constructor(private fb: FormBuilder, private dialogRef: MatDialogRef<RegisterComponent>, private dbSvc: DBService,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.registerForm = this.fb.group({
@@ -28,8 +30,9 @@ export class RegisterComponent implements OnInit {
       if (result == 409)
         return alert('Email already taken, please login.')
       if (result)
-        return alert(`Registered! Welcome ${this.registerForm.value.name}`)
-
+        return this._snackBar.open(`Welcome ${this.registerForm.value.name}`, 'dismiss', {
+          duration: 3000,
+        });
       alert('Registration failed, please try again.')
     }).catch(err => {
       console.log(err)

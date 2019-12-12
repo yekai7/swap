@@ -105,23 +105,53 @@ app.post('/listing', express.json(), (req, resp) => {
         })
 })
 
-// app.get('/listings/:category', (req, resp) => {
-//     const category = req.params.category;
-//     console.log("category is", category);
-//     connection.mongodb.db('swapIt').collection('listing')
-//         .aggregate([
-//             {
-//                 $match: {
-//                     "haveItem.category": category
-//                 }
-//             }
-//         ])
-//         .toArray()
-//         .then(result=>{
-//             console.log("search result is ",result)
-//             resp.status(200).send(result);
-//         })
-// })
+app.get('/listings/category/:category', (req, resp) => {
+    const category = req.params.category;
+    const unwind = (req.query.unwind == 'true');
+    const searchTerm = [{
+        $match: {
+            $or: [{ 'haveItem.listingSubCat': category }, { 'haveItem.category': category }]
+        }
+    }, { $sort: { 'listDate': -1 } }];
+    if (unwind) {
+        searchTerm.push({ $unwind: '$haveItem' });
+        searchTerm.push({
+            $match: {
+                $or: [{ 'haveItem.listingSubCat': category }, { 'haveItem.category': category }]
+            }
+        });
+    }
+    connection.mongodb.db('swapIt').collection('listing')
+        .aggregate(searchTerm)
+        //temporailiy return 5 result only, remove after adding listing score
+        .toArray()
+        .then(result => {
+            console.log("TEST RESULT IS", result)
+            resp.status(200).send(result);
+        })
+        .catch(err => {
+            console.log("ERR IS ", err)
+            resp.status(403).send(err)
+        })
+})
+
+app.get('/listings/title/:title', (req, resp) => {
+    const title = req.params.title;
+    connection.mongodb.db('swapIt').collection('listing')
+        .aggregate([
+            { $match: { 'haveItem.listingTitle': title } },
+            { $unwind: '$haveItem' },
+            { $match: { 'haveItem.listingTitle': title } },
+            { $sort: { 'listDate': -1 } }
+        ])
+        .toArray()
+        .then(result => {
+            resp.status(200).send(result);
+        })
+        .catch(err => {
+            resp.status(403).send(err)
+        })
+})
 
 app.get('/:user/listings', (req, resp) => {
     const user = req.params.user;
@@ -150,12 +180,15 @@ const authToken = (req, resp, next) => {
     if (!auth && auth.startsWith('Bearer '))
         return resp.status(403).json({ message: "Unauthorised action." })
     const token = auth.substring('Bearer '.length)
-    verifyToken(token).then(result => {
-        console.log("authstatus is ", result)
-        if (result)
-            return next();
-        resp.status(401).send({ message: "Invalid token" })
-    })
+    verifyToken(token)
+        .then(result => {
+            if (result)
+                return next();
+            resp.status(401).send({ message: "Invalid token" })
+        })
+        .catch(err => {
+            resp.status(403).send({ message: "No token!" })
+        })
 }
 
 app.delete('/listing', authToken, (req, resp) => {
@@ -163,11 +196,61 @@ app.delete('/listing', authToken, (req, resp) => {
         .deleteOne({
             "_id": ObjectID(req.query.id)
         })
-        .then(result=>{
+        .then(result => {
             resp.status(200).send(result)
         })
-        .catch(err=>{
+        .catch(err => {
             resp.status(400).send(err)
+        })
+})
+
+app.get("/matchListing/:id", authToken, (req, resp) => {
+    connection.mongodb.db('swapIt').collection('listing')
+        .find({
+            "_id": ObjectID(req.params.id)
+        })
+        .toArray()
+        .then(searcher => {
+            const exactMatch = searcher[0].exactMatch;
+            const searcherHave = searcher[0].haveItem;
+            const searcherWant = searcher[0].wantItem;
+            searchTerm = {
+                $and: [
+                ]
+            }
+            if (exactMatch) {
+                for (let i = 0; i < searcherWant.length; i++) {
+                    const a = {
+                        'haveItem.listingTitle': searcherWant[i].listingTitle
+                    }
+                    searchTerm.$and.push(a)
+                }
+            }
+
+            for (let i = 0; i < searcherHave.length; i++) {
+                const a = {
+                    'wantItem.listingSubCat': searcherHave[i].listingSubCat
+                }
+                searchTerm.$and.push(a)
+            }
+
+            for (let i = 0; i < searcherWant.length; i++) {
+                const a = {
+                    'haveItem.listingSubCat': searcherWant[i].listingSubCat
+                }
+                searchTerm.$and.push(a)
+            }
+            console.log(searchTerm)
+
+            connection.mongodb.db('swapIt').collection('listing')
+                .find(searchTerm)
+                .toArray()
+                .then(result => {
+                    resp.status(200).send(result)
+                })
+        })
+        .catch(err => {
+            resp.status(403).send(err)
         })
 })
 

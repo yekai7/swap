@@ -8,7 +8,7 @@
     <div class='search-bar' fxLayoutAlign=' center'>
       <form>
         <mat-form-field style='width:7vw;font-weight: bold;' color='primary'>
-          <mat-select [(value)]="searchBy">
+          <mat-select [(value)]="searchBy" (selectionChange)="test.value = ''">
             <mat-option value="listing">Listing</mat-option>
             <mat-option value="category">Category</mat-option>
           </mat-select>
@@ -19,8 +19,24 @@
             <mat-icon>search</mat-icon>
             <span>Search by {{searchBy}}</span>
           </mat-label>
-          <input matInput type='text' name='search'>
+          <input matInput type='text' name='search' (keyup)="search($event?.target?.value)" #test>
         </mat-form-field>
+        <div class='search-container' *ngIf='test.value' (mouseleave)="test.value =''">
+          <div *ngIf='test.value && searchResult.length > 0'>
+            <p style='text-decoration: underline;text-align: center'>Displaying latest 5 result</p>
+            <div *ngFor='let s of searchResult' (click)='navigate(s._id)'>
+              <div fxLayoutAlign='space-between'>
+                <span><b>{{s.haveItem.listingTitle}}</b></span>
+                <span style='font-size:12px'><i>{{s.haveItem.category}} > {{s.haveItem.listingSubCat}}</i></span>
+              </div>
+              <p>{{s.haveItem.listingDescription}}</p>
+              <hr>
+            </div>
+          </div>
+          <div *ngIf='searchResult.length == 0 && test.value'>
+            <p>No result found.</p>
+          </div>
+        </div>
       </form>
     </div>
 
@@ -35,8 +51,8 @@
           <span>Post listing</span>
         </button>
 
-        <button mat-raised-button [routerLink]="['match']" color='primary'>
-          <span>Match listing</span>
+        <button mat-raised-button [routerLink]="['listings']" color='primary'>
+          <span>Your listings</span>
         </button>
 
         <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
@@ -63,9 +79,18 @@
     </div>
 
   </div>
-  <div class='category-bar'>
-    <div *ngFor='let m of menu'>
-      <button mat-button color='warn' [routerLink]="['category', m.name]" class='menuButton'>{{m.name}}</button>
+  <div class='category-bar' fxLayout='column'>
+    <div fxLayout='row' fxLayoutAlign='space-around'>
+      <div *ngFor='let m of menu'>
+        <button mat-button color='warn' (click)='loadSubMenu(m.name) ' [routerLink]="['category', m.name]"
+          class='menuButton'>{{m.name}}</button>
+      </div>
+    </div>
+
+    <div *ngIf='subMenu.length > 0' fxLayoutAlign='space-around'>
+      <span *ngFor='let sbm of subMenu'>
+        <button mat-button color='accent' [routerLink]="['category', sbm]">{{sbm}}</button>
+      </span>
     </div>
   </div>
   <router-outlet></router-outlet>

@@ -9,11 +9,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 const MODULE = [
     MatInputModule, MatToolbarModule, MatButtonModule,
     MatFormFieldModule, MatCardModule,
     MatIconModule, MatDialogModule,
-    MatSelectModule,
+    MatSelectModule, MatSnackBarModule,
     MatMenuModule, MatCheckboxModule
 ]
 

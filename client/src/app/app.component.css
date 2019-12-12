@@ -15,10 +15,7 @@
 }
 
 .search-bar {
-    padding-top: 4vh;
-    padding-bottom: 2vh;
-    padding-left: 1vw;
-    padding-right: 1vw;
+    padding: 35px 20px 20px 20px;
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2)
 }
@@ -42,7 +39,9 @@
 .footer {
     height:10vh;
     width:100%;
-    box-shadow: 0px -5px 5px  rgba(0, 0, 0, 0.12);
+    /* box-shadow: 0px -5px 5px  rgba(0, 0, 0, 0.12); */
+    border-top: 1px solid lightgrey;
+    /* background-color: grey; */
     display: flex;
     justify-content: space-evenly;
 }
@@ -57,4 +56,14 @@
 
 .menuButton{
     font-size: 20px;
+}
+
+.search-container {
+    position: absolute;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+    background-color: white;
+    z-index: 2;
+    width:47vw;
+    border-radius: 10px;
+    padding:10px;
 }
