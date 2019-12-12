@@ -56,10 +56,6 @@ export class DBService {
     return this.http.get(`${this.url}/categories`).toPromise();
   }
 
-  getSubCategory(name): Promise<any> {
-    return this.http.get(`${this.url}/categories/${name}`).toPromise();
-  }
-
   getListingByCategory(category, unwind = false) {
     const params = new HttpParams().set('unwind', unwind.toString());
     return this.http.get(`${this.url}/listings/category/${category}`, { params }).toPromise();

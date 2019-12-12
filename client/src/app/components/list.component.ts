@@ -26,7 +26,7 @@ export class ListComponent implements OnInit {
   userDetail;
 
   ngOnInit() {
-    this.dbSvc.getListingCategory().then(result => { this.categories = result })
+    this.dbSvc.getCategory().then(result => { this.categories = result })
       .catch(err => { console.log(err) })
     this.haveItem = this.fb.array([]);
     this.haveForm = this.createListingForm(this.haveItem);
