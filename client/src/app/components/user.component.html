@@ -1,1 +1,28 @@
-<p>user works!</p>
+<div fxLayoutAlign='center'>
+    <div class='listingContainer' fxLayout='row'>
+        <div fxLayout='column'>
+            <img src={{userDetail.avatar}} width="500px">
+            <div fxLayoutAlign='space-around center'>
+                <button mat-raised-button onclick="document.getElementById('fileToUpload').click()" class='asd'>
+                    Update avatar
+                </button>
+                <input id="fileToUpload" type="file" name='newAvatar' style="display:none;" ngModel #imageFile>
+                <mat-checkbox name='defaultAvatar' ngModel>Use default avatar?</mat-checkbox>
+            </div>
+
+        </div>
+
+
+        <div>
+            <h2>Update particulars</h2>
+            <form #form='ngForm' (ngSubmit)='processForm(form.value)' enctype="multipart/form-data" fxLayout='column'>
+                <mat-form-field appearance="outline" fxLayoutAlign='center'>
+                    <mat-label>Your name</mat-label>
+                    <input matInput placeholder={{userDetail.name}} type='text' name='name' ngModel>
+                </mat-form-field>
+                <button mat-raised-button color='warn' type='submit'>Update</button>
+            </form>
+        </div>
+
+    </div>
+</div>

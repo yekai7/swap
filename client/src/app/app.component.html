@@ -5,16 +5,15 @@
       <h1>Swap</h1>
     </div>
 
-    <div class='search-bar' fxLayoutAlign=' center'>
+    <div fxLayoutAlign=' center'>
       <form>
-        <mat-form-field style='width:7vw;font-weight: bold;' color='primary'>
+        <mat-form-field style='width:7vw;' color='primary' appearance="outline">
           <mat-select [(value)]="searchBy" (selectionChange)="test.value = ''">
             <mat-option value="listing">Listing</mat-option>
             <mat-option value="category">Category</mat-option>
           </mat-select>
         </mat-form-field>
-        |
-        <mat-form-field style='width:40vw'>
+        <mat-form-field style='width:40vw' appearance="outline" color='primary'>
           <mat-label>
             <mat-icon>search</mat-icon>
             <span>Search by {{searchBy}}</span>

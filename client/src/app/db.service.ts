@@ -12,7 +12,6 @@ export class DBService {
   loginStatus$ = new Subject<boolean>();
   userDetails$ = new Subject<string>();
 
-
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
     if (this.cookieSvc.get('token')) {
       return (true)
@@ -20,7 +19,8 @@ export class DBService {
     return (this.router.parseUrl('/'));
   }
 
-  private url = 'http://localhost:3000';
+  private url = 'http://localhost:3000'
+  // private url = 'https://swapit-server.herokuapp.com';
 
   loginUser(form): Promise<any> {
     return this.http.post(`${this.url}/login`, form).toPromise()
@@ -50,8 +50,19 @@ export class DBService {
       })
   }
 
+
+  updateUserInfo(name, images) {
+    const formData = new FormData();
+    formData.set('name', name);
+    formData.set('avatar', images.nativeElement.files[0]);
+    const token = this.cookieSvc.get('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(`${this.url}/user`, formData, { headers }).toPromise();
+  }
+
   getCategory(): Promise<any> {
-    return this.http.get(`${this.url}/categories`).toPromise();
+    const headers = new HttpHeaders().set('Content-Type', 'application/json')
+    return this.http.get(`${this.url}/categories`).toPromise()
   }
 
   getListingByCategory(category, unwind = false) {
