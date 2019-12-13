@@ -1,0 +1,4 @@
+server/node_modules
+server/dbConfig.js
+server/package-lock.json
+server/schema.sql

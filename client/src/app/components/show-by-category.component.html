@@ -9,7 +9,10 @@
     </div>
 
     <div class='listingContainer'>
-        <div *ngIf='pageListing.length == 0'>No listing for this category.</div>
+        <div *ngIf='!pageListing ||pageListing.length == 0'>
+            <p>No listing found for {{category.toLowerCase()}}.
+            </p>
+        </div>
         <div *ngFor='let l of pageListing'>
             <mat-card class='card-view'>
                 <mat-card-content>
@@ -21,8 +24,8 @@
                     </div>
                 </mat-card-content>
                 <mat-card-actions fxLayoutAlign='center'>
-                    <button mat-raised-button (click)='navigate(l._id)'>More Details</button>
-                    <button mat-raised-button>Message</button>
+                    <button mat-raised-button (click)='navigate(l._id)' color='accent'>More Details</button>
+                    <button mat-raised-button color='warn'>Message</button>
                 </mat-card-actions>
             </mat-card>
         </div>

@@ -17,6 +17,8 @@ import { ListComponent } from './components/list.component';
 import { MatchListingComponent } from './components/match-listing.component';
 import { MatchComponent } from './components/match.component';
 import { ListingDetailComponent } from './components/listing-detail.component';
+import { MainComponent } from './components/main.component';
+import { UserComponent } from './components/user.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { ListingDetailComponent } from './components/listing-detail.component';
     ListComponent,
     MatchListingComponent,
     MatchComponent,
-    ListingDetailComponent
+    ListingDetailComponent,
+    MainComponent,
+    UserComponent
   ],
   imports: [
     BrowserModule,

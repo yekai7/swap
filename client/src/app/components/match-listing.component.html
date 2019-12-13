@@ -12,7 +12,7 @@
         <div style='width:40%'>
             <h2>Have Item</h2>
             <div *ngFor='let haveItem of listing.haveItem; let i=index' fxLayout='column'>
-                <h3>{{i+1}} - {{haveItem.listingTitle}}</h3>
+                <h3>{{i+1}}. {{haveItem.listingTitle}}</h3>
                 <div fxLayoutAlign=' center'>
                     <span class='category'>Category: {{haveItem.category}} ></span>
                     <span class='category'>{{haveItem.listingSubCat}}</span>
@@ -24,7 +24,7 @@
         <div style='width:40%'>
             <h2>Want Item</h2>
             <div *ngFor='let wantItem of listing.wantItem; let i=index' fxLayout='column'>
-                <h3>{{i+1}} - {{wantItem.listingTitle}}</h3>
+                <h3>{{i+1}}. {{wantItem.listingTitle}}</h3>
                 <div fxLayoutAlign=' center'>
                     <span class='category'>Category: {{wantItem.category}} ></span>
                     <span class='category'>{{wantItem.listingSubCat}}</span>
@@ -82,5 +82,6 @@
         <button mat-raised-button (click)='navigate()' color='primary'>
             <span>Post listing</span>
         </button>
+        <button mat-raised-button [routerLink]="['/']" color='warn'>Back</button>
     </div>
 </div>

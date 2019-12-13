@@ -39,9 +39,7 @@
 .footer {
     height:10vh;
     width:100%;
-    /* box-shadow: 0px -5px 5px  rgba(0, 0, 0, 0.12); */
     border-top: 1px solid lightgrey;
-    /* background-color: grey; */
     display: flex;
     justify-content: space-evenly;
 }
@@ -56,14 +54,39 @@
 
 .menuButton{
     font-size: 20px;
+    padding: 10px 25px 10px 25px;
+    margin:20px;
+    font-weight: bold;
+}
+
+.submenuButton{
+    font-size: 15px;
+    padding: 10px 25px 10px 25px;
+    margin:20px;
+    font-weight: bold;
+}
+
+.menuButton:hover, .submenuButton:hover {
+    border-bottom: 2px solid rebeccapurple;
+    cursor: pointer;
 }
 
 .search-container {
     position: absolute;
     box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
     background-color: white;
-    z-index: 2;
+    z-index: 3;
     width:47vw;
     border-radius: 10px;
     padding:10px;
+}
+
+.sub-category-menu {
+    position: absolute;
+    padding: 20px;
+    margin-top:50px;
+    box-shadow: 2px 4px 4px 2px rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    z-index: 2;
+    background-color: white;
 }

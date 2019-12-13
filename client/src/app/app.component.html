@@ -23,7 +23,8 @@
         </mat-form-field>
         <div class='search-container' *ngIf='test.value' (mouseleave)="test.value =''">
           <div *ngIf='test.value && searchResult.length > 0'>
-            <p style='text-decoration: underline;text-align: center'>Displaying latest 5 result</p>
+            <p style='text-decoration: underline;text-align: center'>Displaying latest {{searchResult.length}} result.
+              Max at 5.</p>
             <div *ngFor='let s of searchResult' (click)='navigate(s._id)'>
               <div fxLayoutAlign='space-between'>
                 <span><b>{{s.haveItem.listingTitle}}</b></span>
@@ -64,7 +65,7 @@
         </div>
 
         <mat-menu #menu="matMenu">
-          <button mat-menu-item>
+          <button mat-menu-item [routerLink]="['user']">
             <mat-icon>settings_applications</mat-icon>
             <span>User settings</span>
           </button>
@@ -79,17 +80,16 @@
     </div>
 
   </div>
-  <div class='category-bar' fxLayout='column'>
+  <div class='category-bar' fxLayout='column' fxLayoutAlign=' center'>
     <div fxLayout='row' fxLayoutAlign='space-around'>
       <div *ngFor='let m of menu'>
-        <button mat-button color='warn' (click)='loadSubMenu(m.name) ' [routerLink]="['category', m.name]"
-          class='menuButton'>{{m.name}}</button>
+        <span (mouseenter)='loadSubMenu(m.name)' [routerLink]="['category', m.name]" class='menuButton'>{{m.name.toUpperCase()}}</span>
       </div>
     </div>
 
-    <div *ngIf='subMenu.length > 0' fxLayoutAlign='space-around'>
+    <div *ngIf='subMenu.length > 0' fxLayoutAlign='space-around' (mouseleave)='subMenu = []' class='sub-category-menu'>
       <span *ngFor='let sbm of subMenu'>
-        <button mat-button color='accent' [routerLink]="['category', sbm]">{{sbm}}</button>
+        <span [routerLink]="['category', sbm]" class='submenuButton'>{{sbm}}</span>
       </span>
     </div>
   </div>

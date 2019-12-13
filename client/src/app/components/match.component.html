@@ -33,5 +33,6 @@
 
     <div *ngIf='listings.length == 0'>
         <p>No matched listing</p>
+        <button mat-raised-button [routerLink]="['/listings']">Back</button>
     </div>
 </div>
