@@ -3,10 +3,8 @@ const dbConfig = () => {
     let dbConfig;
     if (fs.existsSync(__dirname, '/dbConfig.js')) {
         dbConfig = require('./dbConfig');
-        dbConfig.mysql.ssl = {
-            ca: fs.readFileSync(dbConfig.mysql.cacert)
-        }
     } else {
+        console.log("it went here")
         dbConfig = {
             mongo: {
                 url: process.env.MONGOURL

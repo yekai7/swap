@@ -1,9 +1,11 @@
+const dbConfig = require('./readSetDbConfig');
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const { genToken, verifyToken } = require('./tokenSvc');
 
-const dbConfig = require('./readSetDbConfig');
+// const dbConfig = require('./readSetDbConfig');
 const mkQuery = require('./dbUtil');
 const { loadDB, testConn } = require('./initDB');
 const connection = loadDB(dbConfig());
