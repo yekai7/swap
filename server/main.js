@@ -1,16 +1,17 @@
-const dbConfig = require('./readSetDbConfig');
 
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const multer = require('multer');
+const fs = require('fs')
 const { genToken, verifyToken } = require('./tokenSvc');
 
-// const dbConfig = require('./readSetDbConfig');
+const dbConfig = require('./readSetDbConfig');
 const mkQuery = require('./dbUtil');
 const { loadDB, testConn } = require('./initDB');
 const connection = loadDB(dbConfig());
 const ObjectID = require('mongodb').ObjectID;
-
+const fileUpload = multer({ dest: __dirname + '/tmp' });
 
 const REGISTER_USER = 'insert into users(email, name, password, avatar) values (?, ?, sha2(?,256), ?)';
 const FIND_USER = 'select count(*) as user_count from users where email = ? and password = sha2(?, 256)';
@@ -43,6 +44,22 @@ passport.use(new LocalStrat(
             })
     }
 ))
+
+const authToken = (req, resp, next) => {
+    const auth = req.get('Authorization');
+    if (!auth && auth.startsWith('Bearer '))
+        return resp.status(403).json({ message: "Unauthorised action." })
+    const token = auth.substring('Bearer '.length)
+    verifyToken(token)
+        .then(result => {
+            if (result)
+                return next();
+            resp.status(401).send({ message: "Invalid token" })
+        })
+        .catch(err => {
+            resp.status(403).send({ message: "No token!" })
+        })
+}
 
 const PORT = parseInt(process.argv[2] || process.env.PORT) || 3000;
 const app = express();
@@ -84,6 +101,33 @@ app.post('/register', express.json(), (req, resp) => {
                 return resp.status(409).send({ message: 'Email already taken' })
             resp.status(400).send({ err })
         })
+})
+
+app.post('/user', fileUpload.single('avatar'), (req, resp) => {
+    if (req.file) {
+        fs.readFile(req.file.path, (err, imgFile) => {
+            const params = {
+                Bucket: 'swap',
+                Key: `avatars/${req.file.filename}`,
+                Body: imgFile,
+                ACL: 'public-read',
+                ContentType: req.file.mimetype
+            }
+
+            //to update sql db also
+            connection.s3.putObject(params, (err, result) => {
+                if (err)
+                    return resp.status(500).send({ message: err })
+                fs.unlink(req.file.path, () => {
+                    if (err)
+                        return resp.status(500).send({ message: err })
+                    resp.status(200).send(`https://swap.sgp1.digitaloceanspaces.com/avatars/${req.file.filename}`);
+                })
+            })
+        })
+
+    }
+
 })
 
 app.get('/categories', (req, resp) => {
@@ -187,22 +231,6 @@ app.get('/:user/listings', (req, resp) => {
             resp.status(200).send(data);
         })
 })
-
-const authToken = (req, resp, next) => {
-    const auth = req.get('Authorization');
-    if (!auth && auth.startsWith('Bearer '))
-        return resp.status(403).json({ message: "Unauthorised action." })
-    const token = auth.substring('Bearer '.length)
-    verifyToken(token)
-        .then(result => {
-            if (result)
-                return next();
-            resp.status(401).send({ message: "Invalid token" })
-        })
-        .catch(err => {
-            resp.status(403).send({ message: "No token!" })
-        })
-}
 
 app.delete('/listing', authToken, (req, resp) => {
     connection.mongodb.db('swapIt').collection('listing')
