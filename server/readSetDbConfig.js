@@ -1,7 +1,7 @@
 const fs = require('fs')
 const dbConfig = () => {
     let dbConfig;
-    if (fs.existsSync(__dirname, '/dbConfig.js')) {
+    if (fs.existsSync(__dirname, './dbConfig.js')) {
         dbConfig = require('./dbConfig');
     } else {
         console.log("it went here")
