@@ -89,10 +89,20 @@ app.get('/categories', (req, resp) => {
         .find({})
         .toArray()
         .then(result => {
-            console.log(result)
-            if (result)
-                return resp.status(200).send(result)
-            resp.status(400).send({ message: "No category found." })
+            if (result) {
+                return resp.format({
+                    'application/json': () => {
+                        resp.status(200).type('application/json').send(result)
+                    },
+                    'default': () => {
+                        resp.status(406).send('Not Acceptable')
+                    }
+                })
+            }
+            resp.status(400).send({ message: "No result" })
+        })
+        .catch(err => {
+            resp.status(400).send(err)
         })
 })
 
@@ -113,6 +123,8 @@ app.get('/listings/category/:category', (req, resp) => {
             $or: [{ 'haveItem.listingSubCat': category }, { 'haveItem.category': category }]
         }
     }, { $sort: { 'listDate': -1 } }];
+
+    //for searching, only displaying nested array that matches
     if (unwind) {
         searchTerm.push({ $unwind: '$haveItem' });
         searchTerm.push({
@@ -123,7 +135,6 @@ app.get('/listings/category/:category', (req, resp) => {
     }
     connection.mongodb.db('swapIt').collection('listing')
         .aggregate(searchTerm)
-        //temporailiy return 5 result only, remove after adding listing score
         .toArray()
         .then(result => {
             console.log("TEST RESULT IS", result)
@@ -246,7 +257,7 @@ app.get("/matchListing/:id", authToken, (req, resp) => {
                 .find(searchTerm)
                 .toArray()
                 .then(result => {
-                    resp.status(200).send(result)
+                    resp.status(200).send({ result, searcher })
                 })
         })
         .catch(err => {
@@ -254,6 +265,9 @@ app.get("/matchListing/:id", authToken, (req, resp) => {
         })
 })
 
+
+
+app.use(express.static(__dirname + '/public'))
 testConn(connection).then(result => {
     console.log(result)
     app.listen(PORT, () => {

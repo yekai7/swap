@@ -15,10 +15,8 @@ export class DBService {
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
     if (this.cookieSvc.get('token')) {
-      console.log("TRUE path")
       return (true)
     }
-    console.log("FALSE PATH")
     return (this.router.parseUrl('/'));
   }
 

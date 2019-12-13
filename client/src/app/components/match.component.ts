@@ -12,11 +12,11 @@ export class MatchComponent implements OnInit {
   constructor(private aRoute: ActivatedRoute, private dbSvc: DBService) { }
 
   listings:any =[];
-
+  yourListing:any = [];
   ngOnInit() {
     this.dbSvc.matchListing(this.aRoute.snapshot.paramMap.get('id')).then(result=>{
-      this.listings = result;
-      console.log(this.listings);
+      this.listings = result['result'];
+      this.yourListing = result['searcher']
     })
   }
 
