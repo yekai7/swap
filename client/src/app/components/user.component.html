@@ -1,6 +1,6 @@
 <div fxLayoutAlign='center'>
-    <div class='listingContainer' fxLayout='row'>
-        <div fxLayout='column'>
+    <div class='listingContainer' fxLayout='row' fxLayoutAlign='space-around'>
+        <div fxLayout='column' fxLayoutGap='2vh'>
             <img src={{userDetail.avatar}} width="500px">
             <div fxLayoutAlign='space-around center'>
                 <button mat-raised-button onclick="document.getElementById('fileToUpload').click()" class='asd'>
@@ -9,18 +9,32 @@
                 <input id="fileToUpload" type="file" name='newAvatar' style="display:none;" ngModel #imageFile>
                 <mat-checkbox name='defaultAvatar' ngModel>Use default avatar?</mat-checkbox>
             </div>
-
         </div>
 
 
-        <div>
+        <div fxLayoutAlign='center ' fxLayout='column'>
             <h2>Update particulars</h2>
-            <form #form='ngForm' (ngSubmit)='processForm(form.value)' enctype="multipart/form-data" fxLayout='column'>
+            <form #form='ngForm' (ngSubmit)='processForm(form.value)' enctype="multipart/form-data">
+
                 <mat-form-field appearance="outline" fxLayoutAlign='center'>
                     <mat-label>Your name</mat-label>
                     <input matInput placeholder={{userDetail.name}} type='text' name='name' ngModel>
                 </mat-form-field>
-                <button mat-raised-button color='warn' type='submit'>Update</button>
+<!-- 
+                <mat-form-field appearance="outline" fxLayoutAlign='center'>
+                    <mat-label>Current password:</mat-label>
+                    <input matInput placeholder={{userDetail.name}} type='password' name='oldpwd' ngModel>
+
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" fxLayoutAlign='center'>
+                    <mat-label>New password:</mat-label>
+                    <input matInput placeholder={{userDetail.name}} type='password' name='newpwd' ngModel>
+                </mat-form-field> -->
+
+                <div fxLayoutAlign='end'>
+                    <button mat-raised-button color='warn' type='submit' [disabled]='form.invalid'>Update</button>
+                </div>
             </form>
         </div>
 

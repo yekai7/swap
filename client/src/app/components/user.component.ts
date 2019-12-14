@@ -22,6 +22,7 @@ export class UserComponent implements OnInit {
   }
 
   processForm(value){
+    console.log(value)
     let name = value.name
     if (!name){
       name = this.userDetail.name;
