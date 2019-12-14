@@ -54,8 +54,8 @@ export class AppComponent implements OnInit, OnDestroy {
     )
   }
   loadSubMenu(name) {
-    for (let i=0; i< this.menu.length; i++){
-      if (this.menu[i].name == name){
+    for (let i = 0; i < this.menu.length; i++) {
+      if (this.menu[i].name == name) {
         return this.subMenu = this.menu[i].subCategories
       }
     }

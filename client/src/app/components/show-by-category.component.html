@@ -3,7 +3,7 @@
         <h1>{{category}}</h1>
         <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
             <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
-            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p,i)">{{p+1}}</button>
+            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p)">{{p+1}}</button>
             <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
         </div>
     </div>
@@ -33,7 +33,7 @@
     <div fxLayout='row' fxLayoutAlign='center center' class='top-bar'>
         <div fxLayoutGap='1vw' fxLayoutAlign=' center' *ngIf='pageCount.length > 1'>
             <mat-icon (click)='left()'>keyboard_arrow_left</mat-icon>
-            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p,i)">{{p+1}}</button>
+            <button mat-mini-fab *ngFor='let p of pageCount;let i=index' (click)="pagination(p)">{{p+1}}</button>
             <mat-icon (click)='right()'>keyboard_arrow_right</mat-icon>
         </div>
     </div>
