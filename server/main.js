@@ -297,7 +297,7 @@ app.get("/matchListing/:id", authToken, (req, resp) => {
 
 
 
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/public/dist/client'))
 testConn(connection).then(result => {
     console.log(result)
     app.listen(PORT, () => {
