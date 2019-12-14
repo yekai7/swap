@@ -1,6 +1,6 @@
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DBService } from '../db.service';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { CookieService } from 'ngx-cookie-service';
@@ -22,6 +22,15 @@ export class ListComponent implements OnInit {
 
   wantForm: FormGroup;
   wantItem: FormArray;
+
+  @ViewChild('imageFile', { static: false })
+  imageFile: ElementRef;
+
+  files;
+  testImage() {
+    this.files = this.imageFile.nativeElement.files;
+    // console.log(this.imageFile.nativeElement.files)
+  }
 
   userDetail;
 
@@ -70,6 +79,7 @@ export class ListComponent implements OnInit {
     return (
       this.fb.group({
         exactMatch: this.fb.control(false),
+        listingImages: this.fb.control(''),
         haveItem: ld || this.fb.array([], Validators.required)
       })
     )
@@ -89,6 +99,7 @@ export class ListComponent implements OnInit {
       listingBy: user.email,
       openToAll: undecided,
       exactMatch: this.haveForm.value.exactMatch,
+      listingImages: this.imageFile.nativeElement.files,
       listDate: new Date().getTime(),
       haveItem: []
     }
@@ -108,7 +119,7 @@ export class ListComponent implements OnInit {
       this._snackBar.open('Listing have been added.', 'dismiss', {
         duration: 3000,
       });
-      this.router.navigate(['/match']);
+      this.router.navigate(['/listings']);
     }).catch(err => {
       console.log(err);
     })

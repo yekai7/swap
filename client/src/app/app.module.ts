@@ -19,6 +19,8 @@ import { MatchComponent } from './components/match.component';
 import { ListingDetailComponent } from './components/listing-detail.component';
 import { MainComponent } from './components/main.component';
 import { UserComponent } from './components/user.component';
+import { SliderModule } from 'angular-image-slider';
+import { NgImageSliderModule } from 'ng-image-slider';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,8 @@ import { UserComponent } from './components/user.component';
     AppRoutingModule,
     HttpClientModule, BrowserAnimationsModule,
     FlexLayoutModule, MaterialModule,
-    ReactiveFormsModule, FormsModule
+    ReactiveFormsModule, FormsModule,
+    SliderModule, NgImageSliderModule
   ],
   providers: [DBService, CookieService],
   bootstrap: [AppComponent],

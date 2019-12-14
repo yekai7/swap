@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
@@ -11,6 +11,7 @@ export class DBService {
 
   loginStatus$ = new Subject<boolean>();
   userDetails$ = new Subject<string>();
+  token = this.cookieSvc.get('token');
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): UrlTree | boolean {
     if (this.cookieSvc.get('token')) {
@@ -52,13 +53,42 @@ export class DBService {
   }
 
 
-  updateUserInfo(name, images) {
+  updateUserInfo(name, email) {
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.token}`)
+      .set('Content-Type', 'application/x-www-form-urlencoded');
+
+    const data = new HttpParams()
+      .set('name', name)
+      .set('email', email)
+    return this.http.post(`${this.url}/user`, data.toString(), { headers }).toPromise()
+      .then(result => {
+        console.log("truend to svc", result);
+        const a = JSON.parse(this.cookieSvc.get('userDetail'))
+        a.name = result['name'];
+        this.cookieSvc.set('userDetail', JSON.stringify(a), 1)
+        this.userDetails$.next(this.cookieSvc.get('userDetail'))
+        return true;
+      })
+      .catch(err => {
+        return false;
+      });
+  }
+
+  updateAvatar(images, email) {
     const formData = new FormData();
-    formData.set('name', name);
-    formData.set('avatar', images.nativeElement.files[0]);
-    const token = this.cookieSvc.get('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(`${this.url}/user`, formData, { headers }).toPromise();
+    formData.set('avatar', images.nativeElement.files[0])
+    formData.set('email', email)
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
+    return this.http.post(`${this.url}/user/avatar`, formData, { headers }).toPromise()
+      .then(result => {
+        this.cookieSvc.set('userDetail', JSON.stringify(result[0]), 1);
+        this.userDetails$.next(this.cookieSvc.get('userDetail'))
+        return result;
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 
   getCategory(): Promise<any> {
@@ -76,7 +106,15 @@ export class DBService {
   }
 
   postListing(listing) {
-    return this.http.post(`${this.url}/listing`, listing).toPromise();
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${this.token}`)
+    const formData = new FormData()
+    for (let i = 0; i < listing.listingImages.length; i++) {
+      formData.append('listingImages', listing.listingImages[i]);
+    }
+    formData.append('listing', JSON.stringify(listing))
+    // console.log(listing)
+    return this.http.post(`${this.url}/listing`, formData, { headers }).toPromise();
   }
 
   getUserListing(user) {
@@ -84,15 +122,13 @@ export class DBService {
   }
 
   deleteListing(id) {
-    const token = this.cookieSvc.get('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     const params = new HttpParams().set('id', id);
     return this.http.delete(`${this.url}/listing`, { headers, params }).toPromise();
   }
 
   matchListing(id) {
-    const token = this.cookieSvc.get('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get(`${this.url}/matchListing/${id}`, { headers }).toPromise();
   }
 }

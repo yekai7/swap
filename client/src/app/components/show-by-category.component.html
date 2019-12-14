@@ -16,6 +16,9 @@
         <div *ngFor='let l of pageListing'>
             <mat-card class='card-view'>
                 <mat-card-content>
+                    <ng-image-slider [images]="l.images" [autoSlide]='1' [infinite]='true' [slideImage]='1'
+                        [imageSize]='{width: 450, height: 250, space: 5}' [animationSpeed]='2' #nav *ngIf='l.images'>
+                    </ng-image-slider>
                     <p>Listed by: {{l.listingBy}}</p>
                     <div *ngFor='let items of l.haveItem'>
                         <h2>{{items.listingTitle}}</h2>

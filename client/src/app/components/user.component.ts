@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CookieService } from 'ngx-cookie-service';
 import { DBService } from '../db.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-user',
@@ -12,26 +13,37 @@ export class UserComponent implements OnInit {
   @ViewChild('imageFile', { static: false })
   imageFile: ElementRef;
 
+  userDetails$: Subscription;
+
   constructor(private cookSvc: CookieService, private dbSvc: DBService) { }
 
-  userDetail;
+  user;
 
   ngOnInit() {
-    this.userDetail = JSON.parse(this.cookSvc.get('userDetail'))
-    console.log(this.userDetail)
+    this.user = JSON.parse(this.cookSvc.get('userDetail'))
+    this.userDetails$ = this.dbSvc.userDetails$.subscribe(
+      v => {
+        this.user = JSON.parse(v);
+        console.log("asfhasjhdj", this.user)
+      }
+    )
   }
 
-  processForm(value){
-    console.log(value)
+  processForm(value) {
     let name = value.name
-    if (!name){
-      name = this.userDetail.name;
+    if (!name) {
+      return false;
     }
-    this.dbSvc.updateUserInfo(name, this.imageFile).then(result=>{
+    this.dbSvc.updateUserInfo(name, this.user.email).then(result => {
       console.log("returend result", result)
-      this.userDetail.avatar = result;
-    }).catch(err=>{
-      console.log("err is",err)
+    }).catch(err => {
+      console.log("erdddr is", err)
+    })
+  }
+
+  updateAvatar() {
+    this.dbSvc.updateAvatar(this.imageFile, this.user.email).then(result => {
+      console.log(result)
     })
   }
 }

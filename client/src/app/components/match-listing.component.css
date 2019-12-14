@@ -23,7 +23,12 @@
     display:block;
 }
 
+.listingImg {
+    width: 400px;
+    height:300px;
+    border-radius: 5%;
+}
+/* .listingImg:hover{
+    opacity: 50%;
+} */
 
-.myClass{
-    color : red;
-  }

@@ -7,8 +7,21 @@
             <button mat-raised-button (click)="addItem(true)" color='accent'>Add item</button>
         </div>
         <mat-checkbox formControlName='exactMatch'>Exact match?</mat-checkbox>
-
+        <div fxLayoutAlign='space-around center'>
+            <button mat-raised-button color='warn' onclick="document.getElementById('fileToUpload').click()">
+                Update images
+            </button>
+            <input id="fileToUpload" multiple type="file" formControlName='listingImages' (change)="testImage()"
+             accept="image/*" style="display:none;" #imageFile>
+            <div *ngIf='files'>
+                <div *ngFor='let f of files'>
+                    <span>{{f.name}} - </span>
+                    <span>{{f.size/1000}}kb</span>
+                </div>
+            </div>
+        </div>
         <div formArrayName="haveItem">
+
             <div *ngFor='let item of haveItem.controls;let i = index;' [formGroup]='item' fxLayout='column'
                 class='item'>
                 <div fxLayout='row' fxLayoutAlign="space-between center">
@@ -17,6 +30,7 @@
                         <mat-icon>delete</mat-icon>Delete
                     </span>
                 </div>
+
                 <mat-form-field class='formField' appearance="outline">
                     <input matInput placeholder='Listing title' type='text' formControlName='listingTitle'>
                 </mat-form-field>
@@ -48,7 +62,7 @@
                 </mat-form-field>
 
                 <mat-form-field *ngIf="cat.value == 'cash'" appearance="outline">
-                    <input type='number' matInput placeholder="$" min='1'formControlName='listingSubCat'>
+                    <input type='number' matInput placeholder="$" min='1' formControlName='listingSubCat'>
                 </mat-form-field>
 
             </div>
@@ -109,7 +123,7 @@
 
         <div fxLayoutGap='2vw' fxLayoutAlign='center center' *ngIf='haveItem.length'>
             <button mat-raised-button color='primary' style='width:40%' color='warn' [disabled]="haveForm.invalid"
-                type="submit" *ngIf='wantItem.length == 0' (click)="processListing()">Undecided, offer me.</button>
+                type="submit"  (click)="processListing()">Undecided, offer me.</button>
             <button mat-raised-button color='primary' style='width:40%'
                 [disabled]="haveForm.invalid || wantForm.invalid || !wantItem.length" color='warn'
                 (click)="processListing(false)" *ngIf='wantItem.length'>List

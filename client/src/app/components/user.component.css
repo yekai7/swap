@@ -6,6 +6,8 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-/* .asd{
-    height:20vh;
-} */
+.avatar {
+    height:400px;
+    width:400px;
+    border-radius: 50%;
+}

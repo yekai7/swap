@@ -23,7 +23,10 @@
 }
 
 .avatar{
-    height:8vh;
+    height:80px;
+    width:80px;
+    border-radius: 50%;
+    margin-top:20px;
 }
 
 .content {
@@ -55,7 +58,7 @@
 
 .submenuButton{
     font-size: 15px;
-    padding: 10px 25px 10px 25px;
+    padding: 10px 0 10px 0;
     margin:20px;
     font-weight: bold;
 }

@@ -86,7 +86,7 @@
       </div>
     </div>
 
-    <div *ngIf='subMenu.length > 0' fxLayoutAlign='space-around' (mouseleave)='subMenu = []' class='sub-category-menu'>
+    <div *ngIf='subMenu.length > 0' fxLayoutAlign='center' (mouseleave)='subMenu = []' class='sub-category-menu'>
       <span *ngFor='let sbm of subMenu'>
         <span [routerLink]="['category', sbm]" class='submenuButton'>{{sbm}}</span>
       </span>

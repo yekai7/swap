@@ -27,9 +27,13 @@ export class MatchListingComponent implements OnInit {
   getListing() {
     this.dbSvc.getUserListing(this.user.email).then(result => {
       this.fullListings = result;
+      if (this.fullListings == 0) {
+        return this.userListings = null;
+      }
       if (result) {
         this.pageCount = Array(Math.ceil(this.fullListings.length / 5)).fill(0).map((x, i) => i);
         this.pagination(this.pageNum);
+        console.log(this.fullListings)
       }
     })
       .catch(err => {
@@ -59,7 +63,19 @@ export class MatchListingComponent implements OnInit {
   pagination(pageNum) {
     this.pageNum = pageNum
     const start = pageNum * 5 || 0
-    return this.userListings = this.fullListings.slice(start, (start + 5))
+    this.userListings = this.fullListings.slice(start, (start + 5))
+    for (let i = 0; i < this.userListings.length; i++) {
+      if (this.userListings[i].listingImages) {
+        this.userListings[i].images = []
+        for (let b = 0; b < this.userListings[i].listingImages.length; b++) {
+          this.userListings[i].images.push({
+            image: this.userListings[i].listingImages[b],
+            thumbImage: this.userListings[i].listingImages[b],
+          })
+        }
+      }
+    }
+    return this.userListings
   }
 
   left() {
@@ -83,7 +99,7 @@ export class MatchListingComponent implements OnInit {
   }
 
   navigate(id) {
-    this.router.navigate(['listing',id]);
+    this.router.navigate(['listing', id]);
   }
 
 }

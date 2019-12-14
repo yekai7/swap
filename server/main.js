@@ -7,7 +7,7 @@ const fs = require('fs')
 const { genToken, verifyToken } = require('./tokenSvc');
 
 const dbConfig = require('./readSetDbConfig');
-const mkQuery = require('./dbUtil');
+const { mkQuery, mkQueryFromPool, commit, rollback, startTransaction } = require('./dbUtil');
 const { loadDB, testConn } = require('./initDB');
 const connection = loadDB(dbConfig());
 const ObjectID = require('mongodb').ObjectID;
@@ -16,9 +16,14 @@ const fileUpload = multer({ dest: __dirname + '/tmp' });
 const REGISTER_USER = 'insert into users(email, name, password, avatar) values (?, ?, sha2(?,256), ?)';
 const FIND_USER = 'select count(*) as user_count from users where email = ? and password = sha2(?, 256)';
 const GET_USER_DETAIL = 'select email, name, avatar, date_joined from users where email = ?';
-const registerUser = mkQuery(REGISTER_USER, connection.mysql);
-const findUser = mkQuery(FIND_USER, connection.mysql);
-const getUserDetail = mkQuery(GET_USER_DETAIL, connection.mysql);
+const UPDATE_USER_NAME = 'update users set name = ? where email = ?';
+const UPDATE_USER_AVATAR = 'update users set avatar = ? where email = ?';
+const registerUser = mkQueryFromPool(REGISTER_USER, connection.mysql)
+const findUser = mkQueryFromPool(FIND_USER, connection.mysql)
+const getUserDetail = mkQueryFromPool(GET_USER_DETAIL, connection.mysql)
+const updateUserName = mkQueryFromPool(UPDATE_USER_NAME, connection.mysql)
+const updateUserAvatar = mkQuery(UPDATE_USER_AVATAR, connection.mysql)
+
 const authenticateUser = (param) => {
     return (
         findUser(param)
@@ -47,7 +52,8 @@ passport.use(new LocalStrat(
 
 const authToken = (req, resp, next) => {
     const auth = req.get('Authorization');
-    if (!auth && auth.startsWith('Bearer '))
+    if (!auth)
+        // if (!auth && auth.startsWith('Bearer '))
         return resp.status(403).json({ message: "Unauthorised action." })
     const token = auth.substring('Bearer '.length)
     verifyToken(token)
@@ -96,6 +102,9 @@ app.post('/register', express.json(), (req, resp) => {
                 console.log(result)
                 resp.status(200).json({ token_type: 'Bearer', access_token: token, userDetail: result })
             })
+                .catch(err => {
+                    console.log(err)
+                })
         }).catch(err => {
             if (err.errno == 1062)
                 return resp.status(409).send({ message: 'Email already taken' })
@@ -103,31 +112,65 @@ app.post('/register', express.json(), (req, resp) => {
         })
 })
 
-app.post('/user', fileUpload.single('avatar'), (req, resp) => {
+app.post('/user', authToken, (req, resp) => {
+    const name = req.body.name;
+    const email = req.body.email
+    updateUserName([name, email])
+        .then(result => {
+            resp.status(200).send({ name: name });
+        }).catch(err => {
+            resp.status(400).send({ message: "err" });
+        })
+})
+
+app.post('/user/avatar', authToken, express.json(), fileUpload.single('avatar'), (req, resp) => {
+    const user = req.body.email
     if (req.file) {
         fs.readFile(req.file.path, (err, imgFile) => {
-            const params = {
+            const s3params = {
                 Bucket: 'swap',
                 Key: `avatars/${req.file.filename}`,
                 Body: imgFile,
                 ACL: 'public-read',
                 ContentType: req.file.mimetype
             }
-
-            //to update sql db also
-            connection.s3.putObject(params, (err, result) => {
-                if (err)
-                    return resp.status(500).send({ message: err })
-                fs.unlink(req.file.path, () => {
-                    if (err)
-                        return resp.status(500).send({ message: err })
-                    resp.status(200).send(`https://swap.sgp1.digitaloceanspaces.com/avatars/${req.file.filename}`);
-                })
+            connection.mysql.getConnection((err, conn) => {
+                startTransaction(conn)
+                    .then(status => {
+                        connection.s3.putObject(s3params, (err, result) => {
+                            if (err)
+                                return rollback;
+                            fs.unlink(req.file.path, () => {
+                            })
+                        })
+                        return ({
+                            connection: status.connection,
+                            avatarUrl: `https://swap.sgp1.digitaloceanspaces.com/avatars/${req.file.filename}`
+                        })
+                    })
+                    .then(status => {
+                        const params = [status.avatarUrl, user]
+                        return (
+                            updateUserAvatar({
+                                connection: status.connection,
+                                params: params
+                            })
+                        )
+                    })
+                    .then(commit, rollback)
+                    .then(
+                        (status) => {
+                            getUserDetail([user]).then(result => {
+                                console.log([{ ...result[0] }])
+                                resp.status(201).send(result);
+                            })
+                        },
+                        (status) => { resp.status(400).json({ error: status.error }); }
+                    )
+                    .finally(() => { console.log("final block"); conn.release() })
             })
         })
-
     }
-
 })
 
 app.get('/categories', (req, resp) => {
@@ -151,14 +194,73 @@ app.get('/categories', (req, resp) => {
             resp.status(400).send(err)
         })
 })
-
-app.post('/listing', express.json(), (req, resp) => {
-    connection.mongodb.db('swapIt').collection('listing')
-        .insertOne(req.body)
-        .then(() => {
-            console.log("REQ BODY", req.body)
-            resp.status(200).send(req.body)
+// const saveImages = async (images) => {
+//     const a = new Promise((resolve, reject) => {
+//         const imagesUrl = []
+//         for (let i = 0; i < images.length; i++) {
+//             fs.readFile(images[i].path, (err, imgFile) => {
+//                 if (err)
+//                     return reject(err);
+//                 const s3params = {
+//                     Bucket: 'swap',
+//                     Key: `listing/${images[i].filename}`,
+//                     Body: imgFile,
+//                     ACL: 'public-read',
+//                     ContentType: images[i].mimetype
+//                 }
+//                 connection.s3.putObject(s3params, (err, result) => {
+//                     if (err)
+//                         return reject(err);
+//                     fs.unlink(images[i].path, () => {
+//                         imagesUrl.push(images[i].filename)
+//                     })
+//                 })
+//             })
+//         }
+//         resolve(imagesUrl)
+//     })
+//     return a
+// }
+app.post('/listing', authToken, fileUpload.array('listingImages', 10), (req, resp) => {
+    const images = req.files
+    let listing = JSON.parse(req.body.listing)
+    const imagesUrl = [];
+    const promises = []
+    for (let i = 0; i < images.length; i++) {
+        let a = new Promise((resolve, reject) => {
+            fs.readFile(images[i].path, (err, imgFile) => {
+                if (err)
+                    return reject(err);
+                const s3params = {
+                    Bucket: 'swap',
+                    Key: `listing/${images[i].filename}`,
+                    Body: imgFile,
+                    ACL: 'public-read',
+                    ContentType: images[i].mimetype
+                }
+                connection.s3.putObject(s3params, (err, result) => {
+                    if (err)
+                        return reject(err);
+                    fs.unlink(images[i].path, () => {
+                        resolve(imagesUrl.push(`https://swap.sgp1.digitaloceanspaces.com/listing/${images[i].filename}`))
+                    })
+                })
+            })
         })
+        promises.push(a)
+    }
+    Promise.all(promises).then(result => {
+        listing.listingImages = imagesUrl
+        connection.mongodb.db('swapIt').collection('listing')
+            .insertOne(listing)
+            .then(() => {
+                resp.status(200).send(listing)
+            })
+            .catch(err => {
+                resp.status(400).send({ message: err })
+            })
+    })
+
 })
 
 app.get('/listings/category/:category', (req, resp) => {
@@ -221,8 +323,8 @@ app.get('/:user/listings', (req, resp) => {
         })
         .toArray()
         .then(result => {
-            if (result.length == 0)
-                return resp.status(404).send({ message: 'No listing for this user' })
+            // if (result.length == 0)
+            //     return resp.status(404).send({ message: 'No listing for this user' })
             const data = result.map(v => {
                 date = new Date(v.listDate)
                 v.listDate = date.toLocaleDateString('en-US');
@@ -299,7 +401,7 @@ app.get("/matchListing/:id", authToken, (req, resp) => {
 
 app.use(express.static(__dirname + '/public/dist/client'))
 testConn(connection).then(result => {
-    console.log(result)
+    // console.log(result)
     app.listen(PORT, () => {
         console.log(`App started, listening on ${PORT} on ${new Date()}`)
     })

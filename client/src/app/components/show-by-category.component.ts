@@ -37,14 +37,28 @@ export class ShowByCategoryComponent implements OnInit {
     })
   }
 
-  navigate(id){
-    this.router.navigate(['listing/',id])
+  navigate(id) {
+    this.router.navigate(['listing/', id])
   }
 
   pagination(pageNum) {
     this.pageNum = pageNum
     const start = pageNum * 9 || 0
-    return this.pageListing = this.fullListings.slice(start, (start + 9))
+    this.pageListing = this.fullListings.slice(start, (start + 9))
+
+    for (let i = 0; i < this.pageListing.length; i++) {
+      if (this.pageListing[i].listingImages) {
+        this.pageListing[i].images = []
+        for (let b = 0; b < this.pageListing[i].listingImages.length; b++) {
+          this.pageListing[i].images.push({
+            image: this.pageListing[i].listingImages[b],
+            thumbImage: this.pageListing[i].listingImages[b],
+          })
+        }
+      }
+    }
+    return this.pageListing
+
   }
   left() {
     if (this.pageNum == 0) {
