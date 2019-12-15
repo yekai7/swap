@@ -13,6 +13,7 @@
 
 
         <div fxLayoutAlign='center ' fxLayout='column' fxLayoutGap='3vh'>
+            <h1>Hi, {{user.name}}</h1>
             <h2>Update particulars</h2>
             <form #form='ngForm' (ngSubmit)='processForm(form.value)' enctype="multipart/form-data">
 

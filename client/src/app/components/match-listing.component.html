@@ -8,14 +8,11 @@
         </div>
     </div>
     <div *ngFor='let listing of userListings' class='item' fxLayout='row' fxLayoutGap='1vw'>
-        <!-- <div *ngIf='listing.listingImages'>
-            <div *ngFor='let img of listing.listingImages'>
-                <img src='https://swap.sgp1.digitaloceanspaces.com/listing/{{img}}' class='listingImg'>
-            </div>
-        </div> -->
-        <div style='width:40%' *ngIf='listing.listingImages'>
-            <ng-image-slider [images]="listing.images" [autoSlide]='4' [infinite]='true' [slideImage]='1'
-                [imageSize]='{width: 450, height: 250, space: 5}' [animationSpeed]='2' #nav>
+
+        <div style='width:40%' *ngIf='listing.listingImages.length > 0'>
+            <ng-image-slider *ngIf='listing.listingImages.length > 0' [images]="listing.listingImages" [autoSlide]='3'
+                [infinite]='true' [slideImage]='1' [imageSize]='{width: 450, height: 250, space: 5}'
+                [animationSpeed]='2' #nav>
             </ng-image-slider>
         </div>
 

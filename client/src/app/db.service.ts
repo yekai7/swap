@@ -61,7 +61,7 @@ export class DBService {
     const data = new HttpParams()
       .set('name', name)
       .set('email', email)
-    return this.http.post(`${this.url}/user`, data.toString(), { headers }).toPromise()
+    return this.http.put(`${this.url}/user`, data.toString(), { headers }).toPromise()
       .then(result => {
         console.log("truend to svc", result);
         const a = JSON.parse(this.cookieSvc.get('userDetail'))
@@ -130,5 +130,14 @@ export class DBService {
   matchListing(id) {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${this.token}`);
     return this.http.get(`${this.url}/matchListing/${id}`, { headers }).toPromise();
+  }
+
+  getListingDetail(id) {
+    const params = new HttpParams().set('id', id);
+    return this.http.get(`${this.url}/listing`, { params }).toPromise();
+  }
+
+  getFeaturedListing() {
+    return this.http.get(`${this.url}/listing/featured`).toPromise();
   }
 }

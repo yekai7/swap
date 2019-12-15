@@ -1,0 +1,12 @@
+.listingContainer {
+    border-radius: 8px;
+    padding: 20px;
+    margin: 50px;
+    width:90vw;
+    /* min-height: calc(100vh - 10vh); */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.haveItemContainer{
+    height:3vh;
+}

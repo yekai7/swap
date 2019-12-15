@@ -26,7 +26,7 @@
                 class='item'>
                 <div fxLayout='row' fxLayoutAlign="space-between center">
                     <span>Item {{i+1}} </span>
-                    <span (click)="removeItem(i,true)" fxLayoutAlign='center center'>
+                    <span (click)="removeItem(i,true)" fxLayoutAlign='center center' style='cursor: pointer;'>
                         <mat-icon>delete</mat-icon>Delete
                     </span>
                 </div>
@@ -86,7 +86,7 @@
                         class='item'>
                         <div fxLayout='row' fxLayoutAlign="space-between center">
                             <span>Item {{t+1}} </span>
-                            <span (click)="removeItem(t)" fxLayoutAlign='center center'>
+                            <span (click)="removeItem(t)" fxLayoutAlign='center center' style='cursor: pointer;'>
                                 <mat-icon>delete</mat-icon>Delete
                             </span>
                         </div>

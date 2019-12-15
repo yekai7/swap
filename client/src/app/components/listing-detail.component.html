@@ -1,1 +1,36 @@
-<p>listing-detail works!</p>
+<div>
+    <div *ngIf='listing.length == 0'>
+        <h1>Loading..</h1>
+    </div>
+    <div *ngIf='listing.length > 0'>
+        <h1>Listing Details</h1>
+        <ng-image-slider [images]="listing[0].listingImages" [autoSlide]='1' [infinite]='true' [slideImage]='1'
+            [imageSize]='{width: 550, height: 400, space: 5}' [animationSpeed]='2' #nav
+            *ngIf='listing[0].listingImages'>
+        </ng-image-slider>
+        <div class='listingContainer'>
+            <div>
+                <p>Listing by: {{listing[0].listingBy}}</p>
+            </div>
+            <div fxLayout='row' fxLayoutAlign='space-around'>
+                <div class='item'>
+                    <h2>Have Item</h2>
+                    <div *ngFor='let h of listing[0].haveItem'>
+                        <p><b>{{h.listingTitle}}</b></p>
+                        <span style='font-size: small;'><i>{{h.category}} > {{h.listingSubCat}}</i></span>
+                        <p>{{h.listingDescription}}</p>
+                    </div>
+                </div>
+
+                <div class='item'>
+                    <h2>Want Item</h2>
+                    <div *ngFor='let h of listing[0].wantItem'>
+                        <p><b>{{h.listingTitle}}</b></p>
+                        <span style='font-size: small;'><i>{{h.category}} > {{h.listingSubCat}}</i></span>
+                        <p>{{h.listingDescription}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

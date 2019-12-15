@@ -1,0 +1,30 @@
+language: node_js
+node_js:
+  - node
+
+dist: bionic
+sudo: required
+
+branches:
+  only:
+   - master
+
+before_script:
+  - npm install -g @angular/cli
+
+script:
+  - ng build --prod --base-href https://yekai7.github.io/swap/
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: dist/swap
+  on:
+    branch: master
+
+notifications:
+  email:
+    recipients:
+      - yekai7@hotmail.com
+    on_failure: always

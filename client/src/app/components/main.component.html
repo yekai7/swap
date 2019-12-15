@@ -1,1 +1,22 @@
-<p>main works!</p>
+<div class='parent'>
+    <div class='listingContainer'>
+        <h1>Featured listings</h1>
+        <div *ngFor='let f of featured' (click)='nagivate(f._id)'>
+            <ng-image-slider [images]="f.listingImages" [autoSlide]='1' [infinite]='true' [slideImage]='1'
+                [imageSize]='{width: 500, height: 270}' [animationSpeed]='5' [imagePopup]='false' #nav
+                *ngIf='f.listingImages'>
+            </ng-image-slider>
+            <div fxLayoutAlign='center center' class='haveItemContainer'>
+                <mat-icon>list</mat-icon>
+                <ul *ngFor='let haveItem of f.haveItem' style='list-style-type: none;'>
+                    <li>
+                        {{haveItem.listingTitle}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class='listingContainer'>
+        <h1>Open listing</h1>
+    </div>
+</div>

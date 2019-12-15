@@ -58,7 +58,7 @@
         <button mat-raised-button [matMenuTriggerFor]="menu" color="primary">
           <span>Menu</span>
         </button>
-        <div fxLayout='column' fxLayoutAlign=' center'>
+        <div fxLayout='column' fxLayoutAlign=' center' [routerLink]="['user']">
           <img [src]='avatarUrl' class='avatar'>
           <span>{{name}}</span>
         </div>

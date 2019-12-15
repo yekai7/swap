@@ -1,0 +1,15 @@
+.listingContainer {
+    border-radius: 8px;
+    padding: 20px;
+    margin: 50px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+
+
+.item {
+    border-radius: 5px;
+    box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.4);
+    margin: 25px;
+    padding: 25px;
+}

@@ -112,7 +112,7 @@ app.post('/register', express.json(), (req, resp) => {
         })
 })
 
-app.post('/user', authToken, (req, resp) => {
+app.put('/user', authToken, (req, resp) => {
     const name = req.body.name;
     const email = req.body.email
     updateUserName([name, email])
@@ -173,6 +173,27 @@ app.post('/user/avatar', authToken, express.json(), fileUpload.single('avatar'),
     }
 })
 
+
+app.get('/:user/listings', (req, resp) => {
+    const user = req.params.user;
+    connection.mongodb.db('swapIt').collection('listing')
+        .find({
+            listingBy: user
+        })
+        .sort({
+            listDate: -1
+        })
+        .toArray()
+        .then(result => {
+            const data = result.map(v => {
+                date = new Date(v.listDate)
+                v.listDate = date.toLocaleDateString('en-US');
+                return v
+            })
+            resp.status(200).send(data);
+        })
+})
+
 app.get('/categories', (req, resp) => {
     connection.mongodb.db('swapIt').collection('categories')
         .find({})
@@ -180,6 +201,9 @@ app.get('/categories', (req, resp) => {
         .then(result => {
             if (result) {
                 return resp.format({
+                    'text/plain': () => {
+                        resp.status(200).type('application/json').send(JSON.stringify(result))
+                    },
                     'application/json': () => {
                         resp.status(200).type('application/json').send(result)
                     },
@@ -194,33 +218,7 @@ app.get('/categories', (req, resp) => {
             resp.status(400).send(err)
         })
 })
-// const saveImages = async (images) => {
-//     const a = new Promise((resolve, reject) => {
-//         const imagesUrl = []
-//         for (let i = 0; i < images.length; i++) {
-//             fs.readFile(images[i].path, (err, imgFile) => {
-//                 if (err)
-//                     return reject(err);
-//                 const s3params = {
-//                     Bucket: 'swap',
-//                     Key: `listing/${images[i].filename}`,
-//                     Body: imgFile,
-//                     ACL: 'public-read',
-//                     ContentType: images[i].mimetype
-//                 }
-//                 connection.s3.putObject(s3params, (err, result) => {
-//                     if (err)
-//                         return reject(err);
-//                     fs.unlink(images[i].path, () => {
-//                         imagesUrl.push(images[i].filename)
-//                     })
-//                 })
-//             })
-//         }
-//         resolve(imagesUrl)
-//     })
-//     return a
-// }
+
 app.post('/listing', authToken, fileUpload.array('listingImages', 10), (req, resp) => {
     const images = req.files
     let listing = JSON.parse(req.body.listing)
@@ -242,7 +240,11 @@ app.post('/listing', authToken, fileUpload.array('listingImages', 10), (req, res
                     if (err)
                         return reject(err);
                     fs.unlink(images[i].path, () => {
-                        resolve(imagesUrl.push(`https://swap.sgp1.digitaloceanspaces.com/listing/${images[i].filename}`))
+                        const imgObj = {
+                            image: `https://swap.sgp1.digitaloceanspaces.com/listing/${images[i].filename}`,
+                            thumbImage: `https://swap.sgp1.digitaloceanspaces.com/listing/${images[i].filename}`
+                        }
+                        resolve(imagesUrl.push(imgObj));
                     })
                 })
             })
@@ -261,6 +263,21 @@ app.post('/listing', authToken, fileUpload.array('listingImages', 10), (req, res
             })
     })
 
+})
+
+app.get('/listing/featured', (req, resp)=>{
+    connection.mongodb.db('swapIt').collection('listing')
+        .find({
+            'featured':true
+        })
+        .sort({'listingDate':-1})
+        .toArray()
+        .then(result=>{
+            resp.status(200).send(result)
+        })
+        .catch(err=>{
+            resp.status(400).send(err)
+        })
 })
 
 app.get('/listings/category/:category', (req, resp) => {
@@ -285,11 +302,9 @@ app.get('/listings/category/:category', (req, resp) => {
         .aggregate(searchTerm)
         .toArray()
         .then(result => {
-            console.log("TEST RESULT IS", result)
             resp.status(200).send(result);
         })
         .catch(err => {
-            console.log("ERR IS ", err)
             resp.status(403).send(err)
         })
 })
@@ -312,28 +327,6 @@ app.get('/listings/title/:title', (req, resp) => {
         })
 })
 
-app.get('/:user/listings', (req, resp) => {
-    const user = req.params.user;
-    connection.mongodb.db('swapIt').collection('listing')
-        .find({
-            listingBy: user
-        })
-        .sort({
-            listDate: -1
-        })
-        .toArray()
-        .then(result => {
-            // if (result.length == 0)
-            //     return resp.status(404).send({ message: 'No listing for this user' })
-            const data = result.map(v => {
-                date = new Date(v.listDate)
-                v.listDate = date.toLocaleDateString('en-US');
-                return v
-            })
-            resp.status(200).send(data);
-        })
-})
-
 app.delete('/listing', authToken, (req, resp) => {
     connection.mongodb.db('swapIt').collection('listing')
         .deleteOne({
@@ -344,6 +337,33 @@ app.delete('/listing', authToken, (req, resp) => {
         })
         .catch(err => {
             resp.status(400).send(err)
+        })
+})
+
+app.get('/listing', (req, resp) => {
+    connection.mongodb.db('swapIt').collection('listing')
+        .find({
+            "_id": ObjectID(req.query.id)
+        })
+        .toArray()
+        .then(result => {
+            resp.format({
+                'text/plain': () => {
+                    resp.status(200).send(JSON.stringify(result))
+                },
+                'text/plain': () => {
+                    resp.status(200).send(`<p>${result}<p>`)
+                },
+                'application/json': () => {
+                    resp.send(result)
+                },
+                'default': () => {
+                    resp.status(406).send('Not Acceptable')
+                }
+            })
+        })
+        .catch(err => {
+            resp.status(400).send({ message: err })
         })
 })
 

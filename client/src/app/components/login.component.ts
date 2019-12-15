@@ -30,14 +30,16 @@ export class LoginComponent implements OnInit {
     this.dialogRef.close(this.loginForm.value);
     this.dbSvc.loginUser(this.loginForm.value).then(result => {
       if (result == 401)
-        return this._snackBar.open('Login failed, please try again..', 'dismiss', {
+        return this._snackBar.open('Login failed, please try again.', 'dismiss', {
           duration: 3000,
         });
       this._snackBar.open('You are logged in now.', 'dismiss', {
         duration: 3000,
       });
     }).catch(err => {
-      alert(err)
+      return this._snackBar.open('Login failed, please try again。', 'dismiss', {
+        duration: 3000,
+      });
     })
   }
 

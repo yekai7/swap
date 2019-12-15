@@ -63,19 +63,7 @@ export class MatchListingComponent implements OnInit {
   pagination(pageNum) {
     this.pageNum = pageNum
     const start = pageNum * 5 || 0
-    this.userListings = this.fullListings.slice(start, (start + 5))
-    for (let i = 0; i < this.userListings.length; i++) {
-      if (this.userListings[i].listingImages) {
-        this.userListings[i].images = []
-        for (let b = 0; b < this.userListings[i].listingImages.length; b++) {
-          this.userListings[i].images.push({
-            image: this.userListings[i].listingImages[b],
-            thumbImage: this.userListings[i].listingImages[b],
-          })
-        }
-      }
-    }
-    return this.userListings
+    return this.userListings = this.fullListings.slice(start, (start + 5))
   }
 
   left() {
