@@ -10,16 +10,18 @@ branches:
    - master
 
 before_script:
+  - cd client
   - npm install -g @angular/cli
 
 script:
+  - cd client
   - ng build --prod --base-href https://yekai7.github.io/swap/
 
 deploy:
   provider: pages
   skip_cleanup: true
   github_token: $GITHUB_TOKEN
-  local_dir: dist/swap
+  local_dir: /dist/swap
   on:
     branch: master
 
