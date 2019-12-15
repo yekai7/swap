@@ -22,7 +22,7 @@
                     </div>
                 </div>
 
-                <div class='item'>
+                <div class='item' *ngIf='listing[0].wantItem.length >0'>
                     <h2>Want Item</h2>
                     <div *ngFor='let h of listing[0].wantItem'>
                         <p><b>{{h.listingTitle}}</b></p>
