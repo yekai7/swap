@@ -10,7 +10,7 @@ branches:
    - master
 
 before_script:
-  - cd ./client
+  - cd ./client/
   - npm install -g @angular/cli
 
 script:
@@ -18,8 +18,8 @@ script:
 
 deploy:
   provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
+  cleanup: true
+  token: $GITHUB_TOKEN
   local_dir: /dist/swap
   on:
     branch: master
