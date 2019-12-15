@@ -21,7 +21,7 @@ deploy:
   provider: pages
   cleanup: true
   token: $GITHUB_TOKEN
-  local_dir: dist/swap
+  local_dir: ./client/dist/client
   on:
     branch: master
 
