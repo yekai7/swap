@@ -14,7 +14,6 @@ before_script:
   - npm install -g @angular/cli
 
 script:
-  - cd client
   - ng build --prod --base-href https://yekai7.github.io/swap/
 
 deploy:
