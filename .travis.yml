@@ -10,10 +10,16 @@ branches:
    - master
 
 before_script:
+  - echo before cd
+  - pwd
   - cd ./client/
+  - echo after cd
+  - ls
+  - pwd
   - npm install -g @angular/cli
 
 script:
+  - ls 
   - cd ./client/
   - ng build --prod --base-href https://yekai7.github.io/swap/
 
