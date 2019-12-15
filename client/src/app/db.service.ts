@@ -20,8 +20,8 @@ export class DBService {
     return (this.router.parseUrl('/'));
   }
 
-  private url = 'http://localhost:3000'
-  // private url = 'http://206.189.84.235:3000'
+  // private url = 'http://localhost:3000'
+  private url = 'http://206.189.47.112:3001'
   // private url = 'https://206.189.84.235:443'
   // private url = 'https://swapit-server.herokuapp.com';
 
