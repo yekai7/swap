@@ -3,7 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const multer = require('multer');
-const fs = require('fs')
+const fs = require('fs');
+const path = require('path');
 const { genToken, verifyToken } = require('./tokenSvc');
 
 const dbConfig = require('./readSetDbConfig');
@@ -419,7 +420,7 @@ app.get("/matchListing/:id", authToken, (req, resp) => {
 
 
 
-app.use(express.static(__dirname + '/public/dist/client'))
+app.use(express.static(path.join(__dirname, 'public/dist/client')));
 testConn(connection).then(result => {
     // console.log(result)
     app.listen(PORT, () => {
