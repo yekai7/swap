@@ -281,6 +281,22 @@ app.get('/listing/featured', (req, resp)=>{
         })
 })
 
+app.get('/listing/open', (req, resp)=>{
+    connection.mongodb.db('swapIt').collection('listing')
+        .find({
+            'openToAll':true
+        })
+        .sort({'listingDate':-1})
+        .limit(5)
+        .toArray()
+        .then(result=>{
+            resp.status(200).send(result)
+        })
+        .catch(err=>{
+            resp.status(400).send(err)
+        })
+})
+
 app.get('/listings/category/:category', (req, resp) => {
     const category = req.params.category;
     const unwind = (req.query.unwind == 'true');

@@ -12,11 +12,19 @@ export class MainComponent implements OnInit {
   constructor(private dbSvc: DBService, private router: Router) { }
 
   featured;
+
+  open;
   ngOnInit() {
     this.dbSvc.getFeaturedListing().then(result => {
       console.log(result)
       this.featured = result
     })
+
+    this.dbSvc.getOpenListing().then(result=>{
+      console.log(result)
+      this.open = result;
+    })
+
   }
 
   nagivate(id) {
